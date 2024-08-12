@@ -12,7 +12,7 @@ export default function SearchBar() {
             <input
               type="text"
               placeholder="Search for food"
-              className="w-full sm:w-auto outline-none focus:ring-0 bg-transparent "
+              className="w-full sm:w-auto border-none bg-transparent "
             />
           </div>
 
@@ -23,7 +23,7 @@ export default function SearchBar() {
             <input
               type="text"
               placeholder="Search by Location"
-              className="w-full sm:w-auto outline-none focus:ring-0 bg-transparent"
+              className="w-full sm:w-auto border-none bg-transparent"
             />
           </div>
         </div>

@@ -1,17 +1,20 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/Local Baba Logo 1.png";
+import termscondition from "../components/TermsCondition";
+import aboutus from "../components/AboutUs";
 
 const navigation = {
   Company: [
-    { name: "About", href: "#" },
+    { name: "About", href: "/aboutus" },
     { name: "Team", href: "#" },
   ],
   ContactUs: [
-    { name: "Help & Support", href: "#" },
-    { name: "Partner with us", href: "#" },
-    { name: "Ride with us", href: "#" },
+    { name: "Help & Support", href: "/contactus" },
+    { name: "Partner with us", href: "/contactus" },
+    { name: "Ride with us", href: "/contactus" },
   ],
   legal: [
-    { name: "Terms & Conditions", href: "#" },
+    { name: "Terms & Conditions", href: "/terms&condition" },
     { name: "Cookie Policy", href: "#" },
     { name: "Privacy Policy", href: "#" },
     { name: "Investor Relations", href: "#" },
@@ -121,12 +124,12 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.Company.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href} // Changed from <a> to <Link>
                         className="text-sm leading-6 text-gray-600 hover:text-gray-900"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -157,16 +160,17 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href} // Changed from <a> to <Link>
                         className="text-sm leading-6 text-gray-600 hover:text-gray-900"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
+
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-gray-900">
                   Downloads
@@ -188,7 +192,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-16 border-t-2 border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
-          <p className=" flex justify-center items-center font-normal text-lg text-xs leading-5 text-gray-500">
+          <p className=" flex justify-center items-center font-normal text-lg leading-5 text-gray-500">
             {" "}
             Copyright &copy; 2024 Local Baba | All Rights Reserved | Terms and
             Conditions | Privacy Policy

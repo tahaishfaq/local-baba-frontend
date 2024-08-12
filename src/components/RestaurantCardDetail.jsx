@@ -48,6 +48,10 @@ const RestaurantCardDetail = () => {
     navigate(`/item/${id}`);
   };
 
+  const handleRestaurantClick = () => {
+    navigate('/SeeAll'); // Navigate to SeeAllRestaurant component
+  };
+
   return (
     <div className="space-y-12">
       {rows.map((row, rowIndex) => (
@@ -60,7 +64,10 @@ const RestaurantCardDetail = () => {
                 className="w-28 h-24 rounded-xl"
               />
               <div>
-                <h2 className="text-2xl font-bold text-[#0D4041]">
+                <h2
+                  className="text-2xl font-bold text-[#0D4041] cursor-pointer"
+                  onClick={handleRestaurantClick} // Add click handler here
+                >
                   Royal Tandoor
                 </h2>
                 <p className="text-[#434343] font-normal text-lg">23-24 Min</p>
