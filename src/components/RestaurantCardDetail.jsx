@@ -58,10 +58,6 @@ const RestaurantCardDetail = () => {
     navigate(`/item/${id}`);
   };
 
-  if (loading) {
-    return <RestaurantCardDetailSkeleton />;
-  }
-
   return (
     <div className="space-y-[70px] max-w-[1440px] mx-auto py-[120px] font-figtree">
       {rows.map((row, rowIndex) => (
@@ -73,8 +69,8 @@ const RestaurantCardDetail = () => {
                 alt="Restaurant"
                 className="w-[114px] h-[90px]  rounded-[13px]"
               />
-              <div className="flex flex-col items-start gap-y-1">
-                <h2 className="text-2xl font-semibold text-[#0D4041]">
+              <div>
+                <h2 className="text-2xl font-bold text-[#0D4041]">
                   Royal Tandoor
                 </h2>
                 <span className="text-[#434343] font-normal flex items-center gap-x-1 text-lg">

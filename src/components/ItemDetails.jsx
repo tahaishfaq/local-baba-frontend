@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Dish1 from "../assets/Dish1.png";
 import Dish2 from "../assets/Dish2.png";
 import Dish3 from "../assets/Dish3.png";
@@ -56,7 +57,7 @@ const FoodCard = ({ name, price, image }) => (
 );
 
 const ItemDetails = () => (
-  <div className=" p-6 max-w-[1440px mx-auto">
+  <div className=" mx-auto p-6">
     <div className=" grid grid-cols-2  space-x-2 w-full ">
       <div className="">
         <h1 className="  text-4xl font-bold text-[#0D4041] mb-2">
@@ -91,63 +92,67 @@ const ItemDetails = () => (
         </div>
       </div>
 
-      <div className="  bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-4">Cart</h2>
-        <div className="space-y-4">
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold mb-4">Cart</h2>
+          <div className="space-y-4">
+            {foodItems.map((item) => (
+              <CartItem key={item.id} {...item} />
+            ))}
+          </div>
+          <div className="mt-4 p-4 bg-[#FE4101E5] rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-semibold text-white">Sub-Total</span>
+              <span className="text-sm font-semibold text-white">₹1000</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-semibold text-white">
+                Delivery Charges
+              </span>
+              <span className="text-sm font-semibold text-white">₹100</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-semibold text-white">Discount</span>
+              <span className="text-sm font-semibold text-white">₹100</span>
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-xl font-bold text-white">Total</span>
+              <span className="text-xl font-bold text-white">₹1000</span>
+            </div>
+            <button
+              onClick={handlePlaceOrder}
+              className="bg-white text-[#FE4101E5] py-2 px-4 rounded-full w-full"
+            >
+              Place My Order
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="flex justify-between items-center mb-4 mt-6">
+          <h2 className="text-2xl font-semibold">All Cuisines</h2>
+          <button className="text-red-500">See All</button>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {["Chicken", "Pizza", "Burger", "Sandwich", "Sushi", "Dessert"].map(
+            (cuisine) => (
+              <button
+                key={cuisine}
+                className="border border-gray-300 py-1 px-4 rounded-full text-sm"
+              >
+                {cuisine}
+              </button>
+            )
+          )}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {foodItems.map((item) => (
-            <CartItem key={item.id} {...item} />
+            <FoodCard key={item.id} {...item} />
           ))}
         </div>
-        <div className="mt-4 p-4 bg-[#FE4101E5] rounded-lg">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-semibold text-white">Sub-Total</span>
-            <span className="text-sm font-semibold text-white">₹1000</span>
-          </div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-semibold text-white">
-              Delivery Charges
-            </span>
-            <span className="text-sm font-semibold text-white">₹100</span>
-          </div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-semibold text-white">Discount</span>
-            <span className="text-sm font-semibold text-white">₹100</span>
-          </div>
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-xl font-bold text-white">Total</span>
-            <span className="text-xl font-bold text-white">₹1000</span>
-          </div>
-          <button className="bg-white text-[#FE4101E5] py-2 px-4 rounded-full w-full">
-            Place My Order
-          </button>
-        </div>
       </div>
     </div>
+  );
 
-    <div>
-      <div className="flex justify-between items-center mb-4 mt-6">
-        <h2 className="text-2xl font-semibold">All Cuisines</h2>
-        <button className="text-red-500">See All</button>
-      </div>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {["Chicken", "Pizza", "Burger", "Sandwich", "Sushi", "Dessert"].map(
-          (cuisine) => (
-            <button
-              key={cuisine}
-              className="border border-gray-300 py-1 px-4 rounded-full text-sm"
-            >
-              {cuisine}
-            </button>
-          )
-        )}
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {foodItems.map((item) => (
-          <FoodCard key={item.id} {...item} />
-        ))}
-      </div>
-    </div>
-  </div>
-);
 
 export default ItemDetails;
