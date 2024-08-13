@@ -128,7 +128,7 @@ const RestaurantCard = () => {
 
   return (
     <div className="px-6 min-h-screen mb-7 max-w-[1440px] mx-auto py-6">
-      <h2 className="text-[36px] font-bold text-[#0D4041] pb-14">
+      <h2 className="text-[36px] font-bold text-[#0D4041] pb-10">
         Top Restaurants
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

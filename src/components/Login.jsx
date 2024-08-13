@@ -1,98 +1,142 @@
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { CiMail } from "react-icons/ci";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
 export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string().required("Password is required"),
+    }),
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
+      try {
+        await login(values);
+        navigate("/dashboard");
+      } catch (err) {
+        setErrors({ general: "Invalid credentials, please try again." });
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
-       
+      <div className="flex min-h-full flex-1 flex-col justify-center lg:py-12 py-0 sm:px-6 lg:px-8">
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[592px]">
+          <div className="bg-white px-6 lg:py-12 py-0 lg:drop-shadow-md lg:rounded-[24px] sm:px-12 lg:border space-y-[30px]">
+            <div className="flex flex-col items-start gap-y-6">
+              <h2 className="text-[36px] font-bold text-[#0D4041] uppercase">
+                Login
+              </h2>
+              <span className="text-[#949494] text-[14px] font-light">
+                Please Log In To Your Account!
+              </span>
+            </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-          <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+            {formik.errors.general && (
+              <div className="text-red-500 text-sm mb-4">
+                {formik.errors.general}
+              </div>
+            )}
 
-
-
-
-          <div className="sm:mx-auto sm:w-full sm:max-w-md my-8">
-         
-         <h2 className="  text-2xl font-bold  text-gray-900">
-          Login
-         </h2>
-         <span className="text-[#949494]">Please Log In To Your Account!</span>
-       </div>
-
-
-
-            <form action="#" method="POST" className="space-y-6">
+            <form onSubmit={formik.handleSubmit} className="space-y-[25px]">
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label htmlFor="email" className="sr-only">
                   Email address
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="email"
                     name="email"
                     type="email"
-                    required
                     autoComplete="email"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6"
+                    placeholder="Enter Email"
+                    {...formik.getFieldProps("email")}
+                    className="block w-full rounded-[12px] border-0 py-[14px] px-[16px]  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6 font-light"
                   />
+                  <span className="absolute inset-y-0 right-4 flex items-center">
+                    <CiMail className="w-5 h-5 text-[#434343]" />
+                  </span>
                 </div>
+                {formik.touched.email && formik.errors.email ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.email}
+                  </div>
+                ) : null}
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label htmlFor="password" className="sr-only">
                   Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
-                    required
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6"
+                    placeholder="Enter Password"
+                    {...formik.getFieldProps("password")}
+                    className="block w-full rounded-[12px] border-0 py-[14px] px-[16px]  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6 font-light"
                   />
+                  <span
+                    className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <FiEyeOff className="w-5 h-5 text-[#434343]" />
+                    ) : (
+                      <FiEye className="w-5 h-5 text-[#434343]" />
+                    )}
+                  </span>
                 </div>
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.password}
+                  </div>
+                ) : null}
               </div>
 
-              <div className="flex items-center justify-between">
-               
-
+              <div className="flex items-center justify-end">
                 <div className="text-sm leading-6">
-                  <a
-                    href="#"
-                    className="font-semibold text-[#FE4101] "
+                  <Link
+                    to="/forget-password"
+                    className="font-light text-[#FE4101] "
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
 
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-[#FE4101] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 "
+                  disabled={formik.isSubmitting}
+                  className="flex w-full justify-center text-[20px] rounded-full bg-[#FE4101] px-3 py-4  font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
-                  Login
+                  {formik.isSubmitting ? "Logging in..." : "Login"}
                 </button>
               </div>
             </form>
 
-            <div>
-              <div className="relative mt-10">
-                
-               
-              </div>
-
-              <div className="mt-6  flex justify-center items-center ">
-                <a
-                  href="#"
-                  className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#F8F8F8] px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm"
-                >
+            <div className="flex flex-col gap-y-[30px] pt-4">
+              <div className=" flex justify-center items-center">
+                <button className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#F8F8F8] px-8 py-3 text-sm font-light text-[#434343] shadow-sm">
                   <svg
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -115,25 +159,17 @@ export default function Login() {
                       fill="#34A853"
                     />
                   </svg>
-                  <span className="text-sm font-semibold leading-6">
-                    Google
-                  </span>
-                </a>
-                
-
-               
+                  <span className="">Google</span>
+                </button>
               </div>
               <div>
-                <p className="mt-10 text-center text-sm text-gray-500">
-          New to local baba?{" "}
-            <a
-              href="#"
-              className="font-semibold leading-6 text-[#FE4101] "
-            >
-              Register
-            </a>
-          </p>
-                </div>
+                <p className="font-light text-center text-sm text-[#949494]">
+                  New to local baba?{" "}
+                  <Link to="/register" className=" leading-6 text-[#FE4101]">
+                    Register
+                  </Link>
+                </p>
+              </div>
             </div>
           </div>
         </div>

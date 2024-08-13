@@ -6,15 +6,13 @@ export default function SearchBar() {
   return (
     <div className="flex items-center justify-center pt-[60px] px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl flex flex-col sm:flex-row items-center py-2.5 px-4 bg-white border border-[#FE4101] rounded-lg sm:rounded-full shadow-md">
-        
         <div className="flex flex-col sm:flex-grow sm:flex-row items-center w-full sm:mb-0 mb-4">
-          
           <div className="flex items-center w-full rounded-lg sm:rounded-none sm:rounded-l-full px-3 py-2 border-[#FE4101] mb-2 sm:mb-0">
             <BiSearch className="text-[#FE4101] mr-2" size={24} />
             <input
               type="text"
               placeholder="Search for food"
-              className="w-full sm:w-auto outline-none focus:ring-0 bg-transparent "
+              className="w-full outline-none focus:ring-0 bg-transparent border-0"
             />
           </div>
 
@@ -25,7 +23,7 @@ export default function SearchBar() {
             <input
               type="text"
               placeholder="Search by Location"
-              className="w-full sm:w-auto outline-none focus:ring-0 bg-transparent"
+              className="w-full outline-none focus:ring-0 bg-transparent border-0"
             />
           </div>
         </div>
