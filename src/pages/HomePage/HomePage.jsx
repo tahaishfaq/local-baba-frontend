@@ -12,7 +12,7 @@ import RestaurantCardDetail from '../../components/RestaurantCardDetail'
 const HomePage = () => {
   return (
     <>
-    <div className='max-w-1440' >
+    <div className='max-w-1440 font-figtree' >
     <NavBar/>
     <HeroSectionHome/>
     <SearchBar/>

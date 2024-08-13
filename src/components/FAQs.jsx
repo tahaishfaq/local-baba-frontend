@@ -1,88 +1,78 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
-import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import React, { useState } from "react";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 const faqs = [
   {
     question: "How does our food delivery service work?",
     answer:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor",
+      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor.",
+  },
+  {
+    question: "What Payment Methods Are Accepted?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
   {
     question: "How Long Does Delivery Take?",
     answer:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor",
-  },
-  {
-    question: "What Payment Methods Are Accepted?",
-    answer:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor",
-  },
-  {
-    question: "Can I Track My Order?",
-    answer:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor",
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
   {
     question: "What Happens If There’s an Issue with My Order?",
     answer:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor",
-  },
-  {
-    question: "Do You Offer Options for Special Dietary Restrictions?",
-    answer:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute irure dolor",
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
   },
 ];
 
-export default function FAQs() {
+const FAQ = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
   return (
-    <div className="mt-24  p-6">
-      <h2 className="text-4xl font-bold leading-10 tracking-tight text-[#0D4041] mb-7">
-        Frequently asked questions
-      </h2>
-      <div className="bg-[#F5F5F5]  rounded-xl">
-        <div className="mx-auto max-w-7xl  sm:py-32 lg:px-2 lg:py-10">
-          <div className="mx-auto max-w-4xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-              {faqs.map((faq) => (
-                <Disclosure
-                  key={faq.question}
-                  as="div"
-                  className="bg-white rounded-lg shadow-md"
-                >
-                  <dt>
-                    <DisclosureButton className="group flex w-full items-start justify-between p-4 text-left text-[#FE4101]">
-                      <span className="text-base font-semibold leading-7 text-black">
-                        {faq.question}
-                      </span>
-                      <span className="ml-6 flex h-7 items-center">
-                        <PlusSmallIcon
-                          aria-hidden="true"
-                          className="h-6 w-6 group-data-[open]:hidden"
-                        />
-                        <MinusSmallIcon
-                          aria-hidden="true"
-                          className="h-6 w-6 bg-[#FE4101] text-white rounded-md [.group:not([data-open])_&]:hidden"
-                        />
-                      </span>
-                    </DisclosureButton>
-                  </dt>
-                  <DisclosurePanel
-                    as="dd"
-                    className="mt-2 p-4 text-base leading-7 text-black"
-                  >
-                    {faq.answer}
-                  </DisclosurePanel>
-                </Disclosure>
-              ))}
-            </div>
-          </div>
+    <div className="max-w-4xl mx-auto my-20 px-4">
+      <div className="max-w-2xl mx-auto font-figtree">
+        <div className="flex flex-col items-center gap-y-4">
+          <h2 className="text-[36px] font-bold text-center text-[#0D4041] ">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-center text-[#949494] mb-10 font-normal ">
+            Lorem ipsum dolor sit amet consectetur adipiscing elit aenean id
+            volutpat imperdiet quis at pellentesque nunc commodo nunc purus
+            pulvinar nisi fusce.
+          </p>
         </div>
+      </div>
+      <div className="space-y-4">
+        {faqs.map((faq, index) => (
+          <div
+            key={index}
+            className={`border ${
+              activeIndex === index ? "border-[#FE4101]" : "border-[#D4D2E3]"
+            } rounded-[15px] px-10 py-12 cursor-pointer`}
+            onClick={() => toggleFAQ(index)}
+          >
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-semibold text-[#0D4041]">
+                {faq.question}
+              </h3>
+              <span>
+                {activeIndex === index ? (
+                  <FaChevronDown className="text-[#FE4101]" />
+                ) : (
+                  <FaChevronRight className="text-[#D4D2E3]" />
+                )}
+              </span>
+            </div>
+            {activeIndex === index && (
+              <p className="text-[#949494] font-normal mt-4">{faq.answer}</p>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
+
+export default FAQ;

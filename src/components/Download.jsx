@@ -6,7 +6,7 @@ import badge2 from "../assets/Play store badge.png";
 const Download = () => {
   return (
     <div className="bg-gradient-to-r from-[#FE4101] to-[#EC7434] flex flex-col lg:flex-row items-center justify-between text-white ">
-      <div className="max-w-lg lg:pl-28 text-center lg:text-left">
+      <div className="max-w-lg lg:ml-28 text-center lg:text-left ">
         <h1 className="text-3xl lg:text-5xl font-bold mb-4">
           Download Local Baba app!
         </h1>
@@ -34,7 +34,7 @@ const Download = () => {
           <img src={badge} alt="App Store" className="h-12 mx-auto lg:mx-0" />
         </div>
       </div>
-      <div className="">
+      <div className="lg:mr-20">
         <img
           src={phones}
           alt="Phones"

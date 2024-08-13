@@ -7,12 +7,13 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { LiaShoppingBasketSolid } from "react-icons/lia";
 import logo from "../assets/Local Baba Logo 1.png";
+import { CiShoppingCart } from "react-icons/ci";
 
 export default function NavBar() {
   return (
     <Disclosure as="nav" className="bg-white shadow">
-      <div className="mx-auto max-w-7xl px-1 sm:px-2 lg:px-1">
-        <div className="flex h-16 justify-between">
+      <div className="mx-auto max-w-7xl px-0 sm:px-2 lg:px-0">
+        <div className="flex  justify-between py-[16px]">
           <div className="flex">
             <div className="-ml-2 mr-2 flex items-center md:hidden">
               {/* Mobile menu button */}
@@ -29,34 +30,34 @@ export default function NavBar() {
               <img alt="Your Company" src={logo} className="" />
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-[16px]">
             <div className="flex-shrink-0 space-x-2">
               <button
                 type="button"
-                className="  relative inline-flex items-center gap-x-1.5 rounded-full border border-[#FE4101] px-3 py-2 text-sm font-medium text-[#FE4101] shadow-sm "
+                className="  relative inline-flex items-center gap-x-1.5 rounded-full border border-[#FE4101] hover:border-[#e03901] hover:text-[#e03901]   px-8 py-3 text-sm font-normal text-[#FE4101] shadow-sm "
               >
                 Login
               </button>
               <button
                 type="button"
-                className=" relative inline-flex items-center gap-x-1.5 rounded-full bg-[#FE4101] px-3 py-2 text-sm font-medium text-white shadow-sm"
+                className=" relative inline-flex items-center gap-x-1.5 rounded-full bg-[#FE4101] hover:bg-[#e03901]  px-8 py-3  text-sm font-normal text-white shadow-sm"
               >
                 Register
               </button>
             </div>
-            <div className="hidden md:block border-r border-gray-300 h-8 mx-4" />
-            <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
+            {/* <div className="hidden md:block border-r border-gray-900 h-8 mx-4" />/ */}
+            <div className="hidden  md:flex md:flex-shrink-0 md:items-center border-l border-[#0D4041]">
               <button
                 type="button"
-                className=" flex flex-row space-x-2 relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className=" flex flex-row space-x-2 relative rounded-full bg-white p-1 text-[#0D4041]  focus:outline-none ring-0 font-figtree"
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
-                <LiaShoppingBasketSolid
+                <CiShoppingCart
                   aria-hidden="true"
                   className="h-6 w-6"
                 />
-                <span className="">Cart</span>
+                <span className="font-figtree">Cart</span>
               </button>
             </div>
           </div>

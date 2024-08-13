@@ -56,7 +56,7 @@ const FoodCard = ({ name, price, image }) => (
 );
 
 const ItemDetails = () => (
-  <div className=" mx-auto p-6">
+  <div className=" p-6 max-w-[1440px mx-auto">
     <div className=" grid grid-cols-2  space-x-2 w-full ">
       <div className="">
         <h1 className="  text-4xl font-bold text-[#0D4041] mb-2">

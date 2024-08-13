@@ -87,15 +87,15 @@ const navigation = {
 
 export default function Footer() {
   return (
-    <footer aria-labelledby="footer-heading" className="bg-white">
+    <footer aria-labelledby="footer-heading" className="bg-white font-figtree">
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
+      <div className="mx-auto max-w-[1440px] px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8">
-            <img alt="Company name" src={logo} className="h-7" />
-            <p className="text-sm leading-6 text-gray-600">
+            <img alt="Company name" src={logo} className="" />
+            <p className="text-[16px] leading-6 text-[#949494] font-light">
               Lorem ipsum dolor sit amet consectetur adipiscing elit aliquam
               mauris sed ma
             </p>
@@ -115,15 +115,15 @@ export default function Footer() {
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Company
                 </h3>
-                <ul role="list" className="mt-6 space-y-4">
+                <ul role="list" className="mt-6 space-y-2.5">
                   {navigation.Company.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                        className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -132,15 +132,15 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Contact Us
                 </h3>
-                <ul role="list" className="mt-6 space-y-4">
+                <ul role="list" className="mt-6 space-y-2.5">
                   {navigation.ContactUs.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                        className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -151,15 +151,15 @@ export default function Footer() {
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
-                  legal
+                <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
+                  Legal
                 </h3>
-                <ul role="list" className="mt-6 space-y-4">
+                <ul role="list" className="mt-6 space-y-2.5">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                        className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -168,15 +168,15 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Downloads
                 </h3>
-                <ul role="list" className="mt-6 space-y-4">
+                <ul role="list" className="mt-6 space-y-2.5">
                   {navigation.Downloads.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                        className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
                       </a>
@@ -187,11 +187,19 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-16 border-t-2 border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
-          <p className=" flex justify-center items-center font-normal text-lg text-xs leading-5 text-gray-500">
+        <div className="mt-16 border-t border-[#D4D2E3] pt-8 sm:mt-20 lg:mt-24">
+          <p className=" flex justify-center items-center font-normal text-[16px]  leading-5 text-[#434343]">
             {" "}
-            Copyright &copy; 2024 Local Baba | All Rights Reserved | Terms and
-            Conditions | Privacy Policy
+            Copyright &copy; 2024 Local Baba&nbsp; | &nbsp;All Rights Reserved
+            &nbsp;|
+            <span className="text-[#949494] hover:underline cursor-pointer">
+              {" "}
+              &nbsp; Terms and Conditions&nbsp;{" "}
+            </span>{" "}
+            |{" "}
+            <span className="text-[#949494] hover:underline cursor-pointer">
+              &nbsp; Privacy Policy{" "}
+            </span>
           </p>
         </div>
       </div>

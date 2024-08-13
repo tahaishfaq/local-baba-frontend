@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { IoIosBicycle, IoIosStar } from "react-icons/io";
+import { FaStar } from "react-icons/fa";
+import RestaurantCardSkeleton from "./skeletons/RestaurantCardDetailSkeleton"; // Import the skeleton component
 import restaurant1 from "../assets/Res1.jpeg";
 import restaurant2 from "../assets/Res2.jpeg";
 import restaurant3 from "../assets/Res3.jpeg";
@@ -9,6 +12,7 @@ import restaurant6 from "../assets/Res6.jpeg";
 import restaurant7 from "../assets/Res7.jpeg";
 import restaurant8 from "../assets/Res8.jpeg";
 import restaurant9 from "../assets/Res9.jpeg";
+import freeDelivery from "../assets/Vector (12).png";
 
 const restaurants = [
   {
@@ -32,7 +36,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 3,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -42,7 +46,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 4,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -52,7 +56,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 5,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -62,7 +66,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 6,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -72,7 +76,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 7,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -82,7 +86,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 8,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -92,7 +96,7 @@ const restaurants = [
     discount: "30% OFF",
   },
   {
-    id: 2,
+    id: 9,
     name: "Royal Tandoor",
     cuisine: "Mediterranean, Indian, Grills",
     rating: 4.5,
@@ -105,56 +109,87 @@ const restaurants = [
 
 const RestaurantCard = () => {
   const navigate = useNavigate();
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a data fetch with a timeout
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000); // Simulate a 2-second fetch time
+  }, []);
 
   const handleCardClick = (id) => {
-    navigate(`/restaurant/${id}`);
+    setSelectedRestaurantId(id);
+    setTimeout(() => {
+      navigate(`/restaurant/${id}`);
+    }, 1000);
   };
 
   return (
-    <div className="p-6 min-h-screen mb-7">
-      <h2 className="text-4xl font-bold text-[#0D4041] mb-4">
+    <div className="px-6 min-h-screen mb-7 max-w-[1440px] mx-auto py-6">
+      <h2 className="text-[36px] font-bold text-[#0D4041] pb-14">
         Top Restaurants
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {restaurants.map((restaurant) => (
-          <div
-            key={restaurant.id}
-            onClick={() => handleCardClick(restaurant.id)}
-            className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer"
-          >
-            <div className="relative">
-              <img
-                src={restaurant.imageUrl}
-                alt={restaurant.name}
-                className="w-full h-48 object-cover rounded-xl"
-              />
-              {restaurant.tag && (
-                <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
-                  {restaurant.tag}
-                </span>
-              )}
-              {restaurant.discount && (
-                <span className="absolute top-1 left-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                  {restaurant.discount}
-                </span>
-              )}
-              {restaurant.deliveryTime && (
-                <span className="absolute bottom-0 right-0 bg-[#FFFFFF05] text-white text-xs font-bold px-2 py-1  rounded-md backdrop-blur-2xl">
-                  🕒 {restaurant.deliveryTime}
-                </span>
-              )}
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">{restaurant.name}</h3>
-              <p className="text-sm text-gray-600">{restaurant.cuisine}</p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-yellow-500 flex items-center">
-                  ⭐ {restaurant.rating}
-                </span>
+        {loading
+          ? Array.from({ length: 9 }).map((_, index) => (
+              <RestaurantCardSkeleton key={index} />
+            ))
+          : restaurants.map((restaurant) => (
+              <div
+                key={restaurant.id}
+                onClick={() => handleCardClick(restaurant?.id)}
+                className={`bg-white rounded-[16px] drop-shadow-lg overflow-hidden cursor-pointer border ${
+                  selectedRestaurantId === restaurant.id
+                    ? "border-[#FE4101]"
+                    : ""
+                } p-[14px]`}
+              >
+                <div className="relative">
+                  <img
+                    src={restaurant.imageUrl}
+                    alt={restaurant.name}
+                    className="w-full h-64 object-cover rounded-xl"
+                  />
+                  {restaurant.tag && (
+                    <span className="absolute top-2 left-2 bg-[#007AFF] text-white text-xs font-semibold px-2 py-1 rounded-full">
+                      <span className="flex items-center gap-x-1">
+                        <img src={freeDelivery} alt="-" className="" />
+                        {restaurant.tag}
+                      </span>
+                    </span>
+                  )}
+                  {restaurant.discount && (
+                    <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                      {restaurant.discount}
+                    </span>
+                  )}
+                  {restaurant.deliveryTime && (
+                    <span className="absolute bottom-0 right-0 text-white text-xs font-medium px-3 py-[9px] time-chip backdrop-blur-2xl">
+                      <span className="flex items-center gap-x-1">
+                        <IoIosBicycle className="w-4 h-4" />{" "}
+                        {restaurant.deliveryTime}
+                      </span>
+                    </span>
+                  )}
+                </div>
+                <div className="py-4 flex flex-col items-start gap-y-2">
+                  <h3 className="text-lg text-[#0D4041] font-semibold">
+                    {restaurant.name}
+                  </h3>
+                  <p className="text-sm font-light text-[#434343]">
+                    {restaurant.cuisine}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#0D4041] flex items-center gap-x-1.5">
+                      <FaStar className="text-orange-500" />
+                      {restaurant.rating}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            ))}
       </div>
     </div>
   );
