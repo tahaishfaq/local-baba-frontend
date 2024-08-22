@@ -1,18 +1,18 @@
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-
 const axiosInstance = axios.create({
   baseURL: 'https://local-baba-backend-production.up.railway.app/api/v1',
 });
 
 export const AxiosInterceptor = ({ children }) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   axiosInstance.interceptors.request.use(
     (config) => {
-      if (user && user.token) {
-        config.headers['Authorization'] = `Bearer ${user.token}`;
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     },
@@ -27,7 +27,7 @@ export const AxiosInterceptor = ({ children }) => {
     },
     (error) => {
       if (error.response && error.response.status === 401) {
-        logout(); // Log out the user if unauthorized
+        console.error('Unauthorized access - 401', error.response.data);
       }
       return Promise.reject(error);
     }

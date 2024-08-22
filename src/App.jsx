@@ -8,6 +8,9 @@ import TermsConditionPage from "./pages/TermsConditionPage/TermsConditionPage";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
 import ContactUs from "./pages/ContactUs/ContactUs";
 import SeeAllPage from "./pages/SeeAllPage/SeeAllPage";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import OTPPage from "./pages/RegisterPage/OTPPage";
+import PayAndOrderPage from "./pages/PayAndOrderPage/PayAndOrderPage";
 
 function App() {
   return (
@@ -18,10 +21,13 @@ function App() {
         <Route path="/item/:id" element={<ItemPage />} />
         <Route path="/order-summary" element={<OrderSummary />} /> 
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/otp" element={<OTPPage />} />
         <Route path="/terms&condition" element={<TermsConditionPage/>} />
         <Route path="/aboutus" element={<AboutUsPage/>} />
         <Route path="/contactus" element={<ContactUs/>} />
-        <Route path="/SeeAll" element={<SeeAllPage/>} />
+        <Route path="/see-resturant-products/:id" element={<SeeAllPage/>} />
+        <Route path="/payOrder" element={<PayAndOrderPage/>} />
       
       </Routes>
     </BrowserRouter>

@@ -2,19 +2,37 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+  Popover,
+  PopoverButton,
+  PopoverPanel,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { LiaShoppingBasketSolid } from "react-icons/lia";
 import logo from "../assets/Local Baba Logo 1.png";
 import { CiShoppingCart } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useContext, useState } from "react";
+import { CartContext } from "../context/CartContext";
+import Cart from "./Cart";
+import {
+  AiOutlineUser,
+  AiOutlineLock,
+  AiOutlineInfoCircle,
+} from "react-icons/ai";
+import { RiDeleteBinLine, RiLogoutBoxLine } from "react-icons/ri";
+import { FiEdit2 } from "react-icons/fi";
 
 export default function NavBar() {
+  const navigate = useNavigate();
+  const { user, loading, logout } = useAuth();
+  const { cartItems } = useContext(CartContext);
+  const [openCart, setOpenCart] = useState(false);
+
   return (
-    <Disclosure as="nav" className="bg-white drop-shadow">
+    <Disclosure as="nav" className="bg-white drop-shadow font-figtree relative z-20">
       <div className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-0">
-        <div className="flex  justify-between py-[16px]">
+        <div className="flex justify-between py-[16px]">
           <div className="flex">
             <div className="-ml-2 mr-2 flex items-center md:hidden">
               {/* Mobile menu button */}
@@ -27,34 +45,164 @@ export default function NavBar() {
                 />
               </DisclosureButton>
             </div>
-            <Link to="/" className="flex flex-shrink-0 items-center cursor-pointer">
-              <img alt="Your Company" src={logo} className="lg:w-auto  w-32 h-auto " />
+            <Link
+              to="/"
+              className="flex flex-shrink-0 items-center cursor-pointer"
+            >
+              <img
+                alt="Your Company"
+                src={logo}
+                className="lg:w-auto w-32 h-auto"
+              />
             </Link>
           </div>
-          <div className="flex items-center lg:gap-x-[16px] ">
-            <div className="flex-shrink-0 space-x-3">
+          <div className="flex items-center lg:gap-x-[16px]">
+            {localStorage.token ? (
+              <Popover className="relative">
+                <PopoverButton className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
+                  <span>
+                    <img
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ8GwkViOEunBePpydMn-mpr6mEIaK5MU-7w&s"
+                      alt={user?.name}
+                      className="w-10 h-10 rounded-full object-cover object-center"
+                    />
+                  </span>
+                </PopoverButton>
+
+                <PopoverPanel
+                  transition
+                  className="absolute z-30 w-screen max-w-sm right-0 bg-white drop-shadow-md border rounded-xl p-4"
+                >
+                  {/* User Info */}
+                  <div className="flex items-center gap-4 p-4 border-b">
+                    <img
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ8GwkViOEunBePpydMn-mpr6mEIaK5MU-7w&s"
+                      alt={user?.name}
+                      className="w-14 h-14 rounded-full object-cover object-center"
+                    />
+                    <div className="flex-1">
+                      <p className="text-base font-semibold text-gray-900">
+                        {user?.name}
+                      </p>
+                      <p className="text-sm text-gray-500">{user?.email}</p>
+                    </div>
+                    <FiEdit2 className="text-gray-500 cursor-pointer" />
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="py-2">
+                    <span className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                      <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
+                        <AiOutlineUser className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-normal text-[#0D4041]">
+                          My Account
+                        </p>
+                        <p className="text-xs text-[#8B8B8B]">
+                          Make Changes To Your Account
+                        </p>
+                      </div>
+                    </span>
+                    <span className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                      <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
+                        <AiOutlineLock className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-normal text-[#0D4041]">
+                          Change Password
+                        </p>
+                        <p className="text-xs text-[#8B8B8B]">
+                          Manage Your Device Security
+                        </p>
+                      </div>
+                    </span>
+                    <span className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                      <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
+                        <AiOutlineInfoCircle className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-normal text-[#0D4041]">
+                          Privacy Policy
+                        </p>
+                      </div>
+                    </span>
+                    <span className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                      <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
+                        <RiDeleteBinLine className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-normal text-[#0D4041]">
+                          Delete Account
+                        </p>
+                        <p className="text-xs text-[#8B8B8B]">
+                          Log Out Your Account
+                        </p>
+                      </div>
+                    </span>
+                    <span className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                      <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
+                        <AiOutlineInfoCircle className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-normal text-[#0D4041]">
+                          About
+                        </p>
+                      </div>
+                    </span>
+                    <span
+                      className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                      onClick={logout}
+                    >
+                      <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
+                        <RiLogoutBoxLine className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-normal text-[#0D4041]">
+                          Log Out
+                        </p>
+                        <p className="text-xs text-[#8B8B8B]">
+                          Log Out Your Account
+                        </p>
+                      </div>
+                    </span>
+                  </div>
+                </PopoverPanel>
+              </Popover>
+            ) : (
+              <div className="flex-shrink-0 space-x-3">
+                <button
+                  type="button"
+                  onClick={() => navigate("/login")}
+                  className="relative inline-flex items-center gap-x-1.5 rounded-full border border-[#FE4101] hover:border-[#e03901] hover:text-[#e03901] lg:px-8 md:px-8 px-6 lg:py-3 md:py-3 py-1.5 text-sm font-normal text-[#FE4101] shadow-sm"
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate("/register")}
+                  className="relative lg:inline-flex md:inline-flex hidden items-center gap-x-1.5 rounded-full bg-[#FE4101] hover:bg-[#e03901] px-8 lg:py-3 text-sm font-normal text-white shadow-sm"
+                >
+                  Register
+                </button>
+              </div>
+            )}
+            <div
+              className="flex flex-shrink-0 items-center lg:border-l md:border-l border-[#0D4041]"
+              onClick={() => setOpenCart(true)}
+            >
               <button
                 type="button"
-                className="  relative inline-flex items-center gap-x-1.5 rounded-full border border-[#FE4101] hover:border-[#e03901] hover:text-[#e03901]   lg:px-8 md:px-8 px-6 lg:py-3 md:py-3 py-1.5 text-sm font-normal text-[#FE4101] shadow-sm "
-              >
-                Login
-              </button>
-              <button
-                type="button"
-                className=" relative lg:inline-flex md:inline-flex hidden items-center gap-x-1.5 rounded-full bg-[#FE4101] hover:bg-[#e03901]  px-8 lg:py-3    text-sm font-normal text-white shadow-sm"
-              >
-                Register
-              </button>
-            </div>
-            {/* <div className="hidden md:block border-r border-gray-900 h-8 mx-4" />/ */}
-            <div className="flex flex-shrink-0 items-center lg:border-l md:border-l border-[#0D4041]">
-              <button
-                type="button"
-                className=" flex flex-row lg:space-x-2 space-x-1.5 relative rounded-full bg-white p-1 text-[#0D4041]  focus:outline-none ring-0 font-figtree"
+                className="flex flex-row lg:space-x-2 space-x-1.5 relative rounded-full bg-white p-1 text-[#0D4041] focus:outline-none ring-0 font-figtree"
               >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
-                <CiShoppingCart aria-hidden="true" className="h-6 w-6" />
+                <div className="relative">
+                  <CiShoppingCart aria-hidden="true" className="h-6 w-6" />
+                  <span className="text-xs absolute -top-1 -right-1 rounded-full bg-red-500 text-white w-4 h-4 z-50">
+                    {cartItems?.length}
+                  </span>
+                </div>
                 <span className="font-figtree">Cart</span>
               </button>
             </div>
@@ -62,9 +210,10 @@ export default function NavBar() {
         </div>
       </div>
 
+      <Cart open={openCart} setOpen={setOpenCart} />
+
       <DisclosurePanel className="hidden">
         <div className="space-y-1 pb-3 pt-2">
-          {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
           <DisclosureButton
             as="a"
             href="#"

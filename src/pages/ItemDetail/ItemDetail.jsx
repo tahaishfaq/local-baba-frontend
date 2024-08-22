@@ -6,7 +6,7 @@ import Breadcrumb from "../../components/BreadCrumb";
 
 const ItemDetail = () => {
   return (
-    <div className="">
+    <div className="font-figtree">
       <NavBar />
       <Breadcrumb/>
       <ItemDetails />

@@ -1,50 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import dish1 from "../assets/card1.png";
-import dish2 from "../assets/card2.png";
-import dish3 from "../assets/card3.png";
-import dish4 from "../assets/card4.png";
-import dish5 from "../assets/card5.png";
-import image from "../assets/Resimage.png";
+import { useNavigate, useParams } from "react-router-dom";
 import Popover from "../components/Popover";
 import { IoIosBicycle } from "react-icons/io";
-import RestaurantCardDetailSkeleton from "./skeletons/ResturantDetailSkeletons";
-
-const foodItems = [
-  { id: 1, name: "Chicken Biryani", price: "₹100", image: dish1 },
-  { id: 2, name: "Chicken Biryani", price: "₹100", image: dish2 },
-  { id: 3, name: "Chicken Biryani", price: "₹100", image: dish3 },
-  { id: 4, name: "Chicken Biryani", price: "₹100", image: dish4 },
-  { id: 5, name: "Chicken Biryani", price: "₹100", image: dish5 },
-  { id: 6, name: "Chicken Biryani", price: "₹100", image: dish1 },
-  { id: 7, name: "Chicken Biryani", price: "₹100", image: dish2 },
-  { id: 8, name: "Chicken Biryani", price: "₹100", image: dish3 },
-  { id: 9, name: "Chicken Biryani", price: "₹100", image: dish4 },
-  { id: 10, name: "Chicken Biryani", price: "₹100", image: dish5 },
-  { id: 11, name: "Chicken Biryani", price: "₹100", image: dish1 },
-  { id: 12, name: "Chicken Biryani", price: "₹100", image: dish2 },
-  { id: 13, name: "Chicken Biryani", price: "₹100", image: dish3 },
-  { id: 14, name: "Chicken Biryani", price: "₹100", image: dish4 },
-  { id: 15, name: "Chicken Biryani", price: "₹100", image: dish5 },
-];
+import axiosInstance from "../utils/axiosInstance";
 
 const RestaurantCardDetail = () => {
-  const [loading, setLoading] = useState(true);
   const [showPopover, setShowPopover] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const [restaurant, setRestaurant] = useState(null);
 
   useEffect(() => {
-    // Simulate data loading
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Adjust time as necessary
-  }, []);
-
-  const rows = [
-    foodItems.slice(0, 5),
-    foodItems.slice(5, 10),
-    foodItems.slice(10, 15),
-  ];
+    axiosInstance
+      .get(`global/restaurant-products/${id}`)
+      .then((res) => {
+        console.log("single",res?.data);
+        setRestaurant(res?.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [id]);
 
   const handleAddToCart = () => {
     setShowPopover(true);
@@ -54,30 +33,39 @@ const RestaurantCardDetail = () => {
     setShowPopover(false);
   };
 
-  const handleCardClick = (id) => {
-    navigate(`/item/${id}`);
+  const handleCardClick = (itemId) => {
+    navigate(`/item/${itemId}`);
   };
 
   return (
     <div className="space-y-[70px] max-w-[1440px] mx-auto py-[120px] font-figtree">
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="space-y-4 ">
-          <div className="flex justify-between items-center mx-4 border-b  pb-[40px]">
+      {/* Restaurant Details */}
+      <div className="space-y-4">
+        {loading ? (
+          <div className="animate-pulse flex justify-between items-center mx-4 border-b pb-[40px]">
+            <div className="flex items-center space-x-4">
+              <div className="w-[114px] h-[90px] rounded-[13px] bg-gray-200"></div>
+              <div className="space-y-2">
+                <div className="w-32 h-6 bg-gray-200 rounded"></div>
+                <div className="w-20 h-4 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+            <div className="w-24 h-8 bg-gray-200 rounded-full"></div>
+          </div>
+        ) : (
+          <div className="flex justify-between items-center mx-4 border-b pb-[40px]">
             <div className="flex items-center space-x-4">
               <img
-                src={image}
+                src={restaurant?.image}
                 alt="Restaurant"
-                className="w-[114px] h-[90px]  rounded-[13px]"
+                className="w-[114px] h-[90px] rounded-[13px] bg-gray-100"
               />
               <div>
                 <h2 className="text-2xl font-bold text-[#0D4041]">
-                  Royal Tandoor
+                  {restaurant?.name}
                 </h2>
                 <span className="text-[#434343] font-normal flex items-center gap-x-1 text-lg">
-                  {" "}
-                  <span>
-                    <IoIosBicycle className="w-5 h-5" />{" "}
-                  </span>
+                  <IoIosBicycle className="w-5 h-5" />
                   23-24 Min
                 </span>
               </div>
@@ -86,35 +74,55 @@ const RestaurantCardDetail = () => {
               See All
             </button>
           </div>
-          {/* <div className="border-t-2 mx-4 my-20"></div> */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-[24px]  pt-[30px]">
-            {row.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white drop-shadow-lg rounded-[14px] p-[14px] cursor-pointer border"
-                onClick={() => handleCardClick(item.id)}
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-52 object-cover object-center rounded-[14px]"
-                />
-                <h3 className="text-lg font-semibold mt-4 text-[#0D4041]">{item.name}</h3>
-                <p className="text-[#434343]">{item.price}</p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart();
-                  }}
-                  className="my-4 text-[#FE4101] text-base font-medium border-[#D9D9D9] border py-2 px-4 rounded-[8px] w-full"
+        )}
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-[24px] pt-[30px]">
+          {loading
+            ? Array(5)
+                .fill("")
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="bg-white drop-shadow-lg rounded-[14px] p-[14px] border animate-pulse"
+                  >
+                    <div className="w-full h-52 bg-gray-200 rounded-[14px]"></div>
+                    <div className="mt-4 space-y-2">
+                      <div className="w-32 h-6 bg-gray-200 rounded"></div>
+                      <div className="w-16 h-4 bg-gray-200 rounded"></div>
+                      <div className="w-full h-10 bg-gray-200 rounded mt-4"></div>
+                    </div>
+                  </div>
+                ))
+            : restaurant?.products?.products?.slice(0,5).map((item) => (
+                <div
+                  key={item._id}
+                  className="bg-white drop-shadow-lg rounded-[14px] p-[14px] cursor-pointer border"
+                  onClick={() => handleCardClick(item._id)}
                 >
-                  Add to Cart
-                </button>
-              </div>
-            ))}
-          </div>
+                  <img
+                    src={item.image}
+                    alt={item.itemName}
+                    className="w-full h-52 object-cover object-center rounded-[14px]"
+                  />
+                  <h3 className="text-lg font-semibold mt-4 text-[#0D4041]">
+                    {item.itemName}
+                  </h3>
+                  <p className="text-[#434343]">{item.basePrice}</p>
+                  <button
+                    // onClick={(e) => {
+                    //   e.stopPropagation();
+                    //   handleAddToCart();
+                    // }}
+                    className="my-4 text-[#FE4101] text-base font-medium border-[#D9D9D9] border py-2 px-4 rounded-[8px] w-full"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              ))}
         </div>
-      ))}
+      </div>
+
       {showPopover && <Popover onClose={handleClosePopover} />}
     </div>
   );

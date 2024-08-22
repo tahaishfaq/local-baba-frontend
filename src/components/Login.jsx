@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CiMail } from "react-icons/ci";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { toast, Toaster } from "sonner"; // Importing sonner
 
 export default function Login() {
   const { login } = useAuth();
@@ -24,10 +25,22 @@ export default function Login() {
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        await login(values);
-        navigate("/dashboard");
+        const result = await login(values);
+        if (result.success) {
+          toast.success("Login successful!");
+          setTimeout(() => {
+            navigate("/");
+          }, 500);
+        } else {
+          setErrors({ general: result.message });
+          toast.error(result.message);
+        }
       } catch (err) {
-        setErrors({ general: "Invalid credentials, please try again." });
+        console.log(err);
+        setErrors({
+          general: "Please try again.",
+        });
+        toast.error("Please try again.");
       } finally {
         setSubmitting(false);
       }
@@ -36,12 +49,13 @@ export default function Login() {
 
   return (
     <>
+      <Toaster richColors position="top-center" />
       <div className="flex min-h-full flex-1 flex-col justify-center lg:py-12 py-0 sm:px-6 lg:px-8">
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[592px]">
           <div className="bg-white px-6 lg:py-12 py-0 lg:drop-shadow-md lg:rounded-[24px] sm:px-12 lg:border space-y-[30px]">
             <div className="flex flex-col items-start gap-y-6">
-              <h2 className="text-[36px] font-bold text-[#0D4041] uppercase">
-                Login
+              <h2 className="text-[36px] font-bold text-[#0D4041] ">
+                Buyer Login
               </h2>
               <span className="text-[#949494] text-[14px] font-light">
                 Please Log In To Your Account!
@@ -67,7 +81,7 @@ export default function Login() {
                     autoComplete="email"
                     placeholder="Enter Email"
                     {...formik.getFieldProps("email")}
-                    className="block w-full rounded-[12px] border-0 py-[14px] px-[16px]  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6 font-light"
+                    className="block w-full rounded-[12px] border-0 py-[14px] px-[16px] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6 font-light"
                   />
                   <span className="absolute inset-y-0 right-4 flex items-center">
                     <CiMail className="w-5 h-5 text-[#434343]" />
@@ -92,7 +106,7 @@ export default function Login() {
                     autoComplete="current-password"
                     placeholder="Enter Password"
                     {...formik.getFieldProps("password")}
-                    className="block w-full rounded-[12px] border-0 py-[14px] px-[16px]  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6 font-light"
+                    className="block w-full rounded-[12px] border-0 py-[14px] px-[16px] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm sm:leading-6 font-light"
                   />
                   <span
                     className="absolute inset-y-0 right-4 flex items-center cursor-pointer"
@@ -116,7 +130,7 @@ export default function Login() {
                 <div className="text-sm leading-6">
                   <Link
                     to="/forget-password"
-                    className="font-light text-[#FE4101] "
+                    className="font-light text-[#FE4101]"
                   >
                     Forgot password?
                   </Link>
@@ -127,7 +141,7 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={formik.isSubmitting}
-                  className="flex w-full justify-center text-[20px] rounded-full bg-[#FE4101] px-3 py-4  font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  className="flex w-full justify-center text-[20px] rounded-full bg-[#FE4101] px-3 py-4 font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                   {formik.isSubmitting ? "Logging in..." : "Login"}
                 </button>
@@ -135,7 +149,7 @@ export default function Login() {
             </form>
 
             <div className="flex flex-col gap-y-[30px] pt-4">
-              <div className=" flex justify-center items-center">
+              <div className="flex justify-center items-center">
                 <button className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#F8F8F8] px-8 py-3 text-sm font-light text-[#434343] shadow-sm">
                   <svg
                     viewBox="0 0 24 24"
@@ -159,13 +173,13 @@ export default function Login() {
                       fill="#34A853"
                     />
                   </svg>
-                  <span className="">Google</span>
+                  <span>Google</span>
                 </button>
               </div>
               <div>
                 <p className="font-light text-center text-sm text-[#949494]">
-                  New to local baba?{" "}
-                  <Link to="/register" className=" leading-6 text-[#FE4101]">
+                  New to Local Baba?{" "}
+                  <Link to="/register" className="leading-6 text-[#FE4101]">
                     Register
                   </Link>
                 </p>

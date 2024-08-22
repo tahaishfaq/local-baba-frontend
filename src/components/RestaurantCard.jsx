@@ -1,129 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoIosBicycle, IoIosStar } from "react-icons/io";
+import { IoIosBicycle } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
 import RestaurantCardSkeleton from "./skeletons/RestaurantCardDetailSkeleton"; // Import the skeleton component
-import restaurant1 from "../assets/Res1.jpeg";
-import restaurant2 from "../assets/Res2.jpeg";
-import restaurant3 from "../assets/Res3.jpeg";
-import restaurant4 from "../assets/Res4.jpeg";
-import restaurant5 from "../assets/Res5.jpeg";
-import restaurant6 from "../assets/Res6.jpeg";
-import restaurant7 from "../assets/Res7.jpeg";
-import restaurant8 from "../assets/Res8.jpeg";
-import restaurant9 from "../assets/Res9.jpeg";
-import freeDelivery from "../assets/Vector (12).png";
+import axiosInstance from "../utils/axiosInstance"; // Import the axios instance
+import moment from "moment";
+import {  useResturant } from "../context/ResturantContext";
 
-const restaurants = [
-  {
-    id: 1,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant1,
-    tag: "Free delivery", // Optional, can be empty string if not applicable
-    discount: "", // Optional, can be empty string if not applicable
-  },
-  {
-    id: 2,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant2,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 3,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant3,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 4,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant4,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 5,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant5,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 6,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant6,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 7,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant7,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 8,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant8,
-    tag: "",
-    discount: "30% OFF",
-  },
-  {
-    id: 9,
-    name: "Royal Tandoor",
-    cuisine: "Mediterranean, Indian, Grills",
-    rating: 4.5,
-    deliveryTime: "22-34 min",
-    imageUrl: restaurant9,
-    tag: "",
-    discount: "30% OFF",
-  },
-];
+// const restaurants = [
+//   {
+//     id: 1,
+//     name: "Royal Tandoor",
+//     cuisine: "Mediterranean, Indian, Grills",
+//     rating: 4.5,
+//     deliveryTime: "22-34 min",
+//     imageUrl: restaurant1,
+//     tag: "Free delivery", // Optional, can be empty string if not applicable
+//     discount: "", // Optional, can be empty string if not applicable
+//   },]
+
 
 const RestaurantCard = () => {
   const navigate = useNavigate();
   const [selectedRestaurantId, setSelectedRestaurantId] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
+  const {restaurants, loadingRestaurants, setSelectedRestaurant} = useResturant()
 
-  useEffect(() => {
-    // Simulate a data fetch with a timeout
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Simulate a 2-second fetch time
-  }, []);
+  // useEffect(() => {
+  //   // Fetch restaurants from the API
+  //   const fetchRestaurants = async () => {
+  //     try {
+  //       const response = await axiosInstance.get("global/all-restaurants");
+  //       console.log("Restaurants", response.data);
+  //       setRestaurants(response.data.restaurants);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Failed to fetch restaurants", error);
+  //       setLoading(false);
+  //     }
+  //   };
 
-  const handleCardClick = (id) => {
-    setSelectedRestaurantId(id);
+  //   fetchRestaurants();
+  // }, []);
+
+  const handleCardClick = (rest) => {
+    setSelectedRestaurantId(rest?._id);
+    setSelectedRestaurant(rest)
     setTimeout(() => {
-      navigate(`/restaurant/${id}`);
+      navigate(`/see-resturant-products/${rest?._id}`);
     }, 1000);
+  };
+
+  const formatOperatingHours = (hours) => {
+    const [start, end] = hours.split(" - ");
+    const formattedStart = moment(start, "hh:mm A").format("hA");
+    const formattedEnd = moment(end, "hh:mm A").format("hA");
+    return `${formattedStart} - ${formattedEnd}`;
   };
 
   return (
@@ -132,23 +64,23 @@ const RestaurantCard = () => {
         Top Restaurants
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading
+        {loadingRestaurants
           ? Array.from({ length: 9 }).map((_, index) => (
               <RestaurantCardSkeleton key={index} />
             ))
-          : restaurants.map((restaurant) => (
+          : restaurants?.map((restaurant) => (
               <div
-                key={restaurant.id}
-                onClick={() => handleCardClick(restaurant?.id)}
+                key={restaurant._id}
+                onClick={() => handleCardClick(restaurant)}
                 className={`bg-white rounded-[16px] drop-shadow-lg overflow-hidden cursor-pointer border ${
-                  selectedRestaurantId === restaurant.id
+                  selectedRestaurantId === restaurant._id
                     ? "border-[#FE4101]"
                     : ""
                 } p-[14px]`}
               >
                 <div className="relative">
                   <img
-                    src={restaurant.imageUrl}
+                    src={restaurant.image}
                     alt={restaurant.name}
                     className="w-full h-64 object-cover rounded-xl"
                   />
@@ -165,11 +97,11 @@ const RestaurantCard = () => {
                       {restaurant.discount}
                     </span>
                   )}
-                  {restaurant.deliveryTime && (
+                  {restaurant.operatingHours && (
                     <span className="absolute bottom-0 right-0 text-white text-xs font-medium px-3 py-[9px] time-chip backdrop-blur-2xl">
                       <span className="flex items-center gap-x-1">
                         <IoIosBicycle className="w-4 h-4" />{" "}
-                        {restaurant.deliveryTime}
+                        {formatOperatingHours(restaurant.operatingHours)}
                       </span>
                     </span>
                   )}
@@ -179,12 +111,12 @@ const RestaurantCard = () => {
                     {restaurant.name}
                   </h3>
                   <p className="text-sm font-light text-[#434343]">
-                    {restaurant.cuisine}
+                    {restaurant.cuisineType}
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-[#0D4041] flex items-center gap-x-1.5">
                       <FaStar className="text-orange-500" />
-                      {restaurant.rating}
+                      {restaurant.ratings.toFixed(2)}
                     </span>
                   </div>
                 </div>

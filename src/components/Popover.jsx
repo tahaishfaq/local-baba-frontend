@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import image from "../assets/Resimage.png"; // Update the path if needed
-import image2 from "../assets/popoverimage.png";
+import { CartContext } from "../context/CartContext";
 
-const Popover = ({ onClose }) => {
+const Popover = ({ onClose, item }) => {
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useContext(CartContext);
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -15,20 +16,25 @@ const Popover = ({ onClose }) => {
     }
   };
 
+  const handleAddToCart = () => {
+    addToCart({ ...item, quantity }, quantity);
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6 lg:p-8">
       <div className="bg-white flex flex-col sm:flex-row max-w-4xl w-full sm:w-auto rounded-xl shadow-lg">
         <div className="w-full sm:w-1/2 p-4">
           <img
-            src={image2}
+            src={item?.image}
             alt="Dish"
-            className="w-full h-auto rounded-lg object-cover"
+            className="w-96 h-auto rounded-lg object-cover"
           />
         </div>
         <div className="w-full sm:w-1/2 p-4 sm:p-6">
           <div className="flex justify-between items-start mb-4">
             <h2 className="text-lg sm:text-xl font-semibold text-[#0D4041]">
-              Chicken Biryani
+              {item.itemName}
             </h2>
             <button
               onClick={onClose}
@@ -39,13 +45,13 @@ const Popover = ({ onClose }) => {
           </div>
           <div className="flex items-center space-x-4 mb-4 sm:mb-6 border-2 rounded-xl shadow-md p-2">
             <img
-              src={image}
-              alt="Dish"
-              className="w-16 h-16 rounded-lg object-cover"
+              src={item?.restaurant?.image}
+              alt={item?.restaurant?.name}
+              className="w-16 h-16 rounded-lg object-cover bg-gray-100"
             />
             <div>
               <h3 className="font-semibold text-[#0D4041] text-base sm:text-lg">
-                Royal Tandoor
+                {item?.restaurant?.name}
               </h3>
               <p className="text-[#949494] text-xs sm:text-sm">22-34 Min</p>
             </div>
@@ -78,9 +84,12 @@ const Popover = ({ onClose }) => {
                 +
               </button>
             </div>
-            <button className="bg-[#FE4101] text-white px-4 sm:px-6 py-3 rounded-lg flex items-center justify-between w-full sm:w-auto space-x-2">
+            <button
+              onClick={handleAddToCart}
+              className="bg-[#FE4101] text-white px-4 sm:px-6 py-3 rounded-lg flex items-center justify-between w-full sm:w-auto space-x-2"
+            >
               <span>Add To Cart</span>
-              <span className="font-semibold">₹{1000 * quantity}</span>
+              {/* <span className="font-semibold">₹{(item.basePrice * quantity).toFixed(2)}</span> */}
             </button>
           </div>
         </div>

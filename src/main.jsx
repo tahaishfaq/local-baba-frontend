@@ -4,13 +4,19 @@ import App from "./App.jsx";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { AxiosInterceptor } from "./utils/axiosInstance.js";
+import { RestaurantProductProvider } from "./context/ResturantContext.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <AxiosInterceptor>
-        <App />
-      </AxiosInterceptor>
-    </AuthProvider>
+    <RestaurantProductProvider>
+      <AuthProvider>
+        <AxiosInterceptor>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </AxiosInterceptor>
+      </AuthProvider>
+    </RestaurantProductProvider>
   </StrictMode>
 );

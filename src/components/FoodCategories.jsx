@@ -3,71 +3,61 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import indian from "../assets/Indian.png";
-import burger from "../assets/Burger.png";
-import pizza from "../assets/Pizza.png";
-import chinese from "../assets/Chinese.png";
-import biryani from "../assets/Biryani.png";
-import cake from "../assets/Cake.png";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import CarouselSkeleton from "../components/skeletons/CarouselSkeleton"; // Import the skeleton component
-
-const carouselItems = [
-  { id: 1, text: "Indian", image: indian },
-  { id: 2, text: "Burger", image: burger },
-  { id: 3, text: "Pizza", image: pizza },
-  { id: 4, text: "Chinese", image: chinese },
-  { id: 5, text: "Biryani", image: biryani },
-  { id: 6, text: "Cake", image: cake },
-  { id: 7, text: "Indian", image: indian },
-  { id: 8, text: "Burger", image: burger },
-  { id: 9, text: "Pizza", image: pizza },
-  { id: 10, text: "Chinese", image: chinese },
-  { id: 11, text: "Biryani", image: biryani },
-  { id: 12, text: "Cake", image: cake },
-];
-
-const settings = {
-  dots: false,
-  infinite: false,
-  speed: 500,
-  slidesToShow: 6,
-  slidesToScroll: 6,
-  arrows: false, // Disable default arrows
-  responsive: [
-    {
-      breakpoint: 1024, // Tablet screen size
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: 768, // Mobile screen size
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
-    },
-    {
-      breakpoint: 480, // Very small screens
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
+import CarouselSkeleton from "../components/skeletons/CarouselSkeleton"; 
+import axiosInstance from "../utils/axiosInstance";
 
 function Carousel() {
   let sliderRef = React.createRef();
   const [loading, setLoading] = useState(true);
+  const [carouselItems, setCarouselItems] = useState([]);
+
+  const settings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: carouselItems.length >= 6 ? 6 : carouselItems.length,
+    slidesToScroll: carouselItems.length >= 6 ? 6 : carouselItems.length,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: carouselItems.length >= 4 ? 4 : carouselItems.length,
+          slidesToScroll: carouselItems.length >= 4 ? 4 : carouselItems.length,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: carouselItems.length >= 2 ? 2 : carouselItems.length,
+          slidesToScroll: carouselItems.length >= 2 ? 2 : carouselItems.length,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
 
   useEffect(() => {
-    // Simulate data loading with a timeout
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosInstance.get("global/all-categories");
+        console.log("Categories", response.data);
+        setCarouselItems(response.data.categories);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   const handleNext = () => {
@@ -83,41 +73,46 @@ function Carousel() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-[70px] relative font-figtree">
+    <div className="max-w-7xl mx-auto py-[70px] relative font-figtree md:overflow-hidden md:z-[-10000]">
       <h1 className="font-bold text-4xl mb-7 text-[#434343]">
         Food Categories
       </h1>
-      
+
       <Slider ref={(c) => (sliderRef = c)} {...settings}>
         {carouselItems?.map((item) => (
-          <div key={item.id} className="px-2 flex items-center justify-center cursor-pointer">
-            <div className="p-4 rounded-lg text-center flex flex-col items-center">
+          <div
+            key={item?._id}
+            className="px-2 flex items-center justify-center "
+          >
+            <div className="text-center flex flex-col items-center cursor-pointer ">
               <img
-                src={item.image}
-                alt={item.text}
-                className="w-full h-40 object-contain"
+                src={item?.image}
+                alt={item?.name}
+                className="w-60 h-60 object-cover object-top rounded-full bg-gray-100"
               />
-              <p className="mt-2 text-lg text-[#434343] font-semibold">{item.text}</p>
+              <p className="mt-2 text-lg capitalize text-[#434343] font-semibold">
+                {item?.name}
+              </p>
             </div>
           </div>
         ))}
       </Slider>
 
-      {/* Custom Previous Arrow */}
-      <button
-        onClick={handlePrev}
-        className="absolute top-1/2 transform -translate-y-1/2 -left-10 text-[#1C274C] bg-white rounded-full border p-2 text-4xl z-10 focus:outline-none shadow"
-      >
-        <IoIosArrowBack />
-      </button>
+      <div className="flex justify-between mt-4 md:mt-0 md:absolute md:top-1/2 md:left-0 md:right-0 md:px-10">
+        <button
+          onClick={handlePrev}
+          className="text-[#1C274C] bg-white rounded-full border p-2 text-3xl focus:outline-none shadow md:absolute md:-left-0 md:top-1/2 transform md:-translate-y-1/2"
+        >
+          <IoIosArrowBack />
+        </button>
 
-      {/* Custom Next Arrow */}
-      <button
-        onClick={handleNext}
-        className="absolute top-1/2 transform -translate-y-1/2 -right-10 text-[#1C274C] bg-white rounded-full border p-2 text-4xl z-10 focus:outline-none shadow"
-      >
-        <IoIosArrowForward />
-      </button>
+        <button
+          onClick={handleNext}
+          className="text-[#1C274C] bg-white rounded-full border p-2 text-3xl focus:outline-none shadow md:absolute md:-right-0 md:top-1/2 transform md:-translate-y-1/2"
+        >
+          <IoIosArrowForward />
+        </button>
+      </div>
     </div>
   );
 }
