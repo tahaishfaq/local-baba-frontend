@@ -15,7 +15,7 @@ const RestaurantCardDetail = () => {
     axiosInstance
       .get(`global/restaurant-products/${id}`)
       .then((res) => {
-        console.log("single",res?.data);
+        console.log("single", res?.data);
         setRestaurant(res?.data);
         setLoading(false);
       })
@@ -94,7 +94,7 @@ const RestaurantCardDetail = () => {
                     </div>
                   </div>
                 ))
-            : restaurant?.products?.products?.slice(0,5).map((item) => (
+            : restaurant?.products?.products?.slice(0, 5).map((item) => (
                 <div
                   key={item._id}
                   className="bg-white drop-shadow-lg rounded-[14px] p-[14px] cursor-pointer border"

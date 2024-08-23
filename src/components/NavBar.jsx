@@ -22,6 +22,7 @@ import {
 } from "react-icons/ai";
 import { RiDeleteBinLine, RiLogoutBoxLine } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
+import { MdOutlinePerson } from "react-icons/md";
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -171,6 +172,17 @@ export default function NavBar() {
               </Popover>
             ) : (
               <div className="flex-shrink-0 space-x-3">
+                
+                
+                <button
+                  type="button"
+                  onClick={() => navigate("/seller")}
+                  className="relative inline-flex items-center justify-center gap-x-1.5   text-[#e03901] lg:px-6 md:px-8 px-6 lg:py-3 md:py-3 py-1.5 text-sm font-normal"
+                >
+                  <MdOutlinePerson className="text-base text-[#e03901]" />
+                  Become a seller
+                </button>
+                
                 <button
                   type="button"
                   onClick={() => navigate("/login")}

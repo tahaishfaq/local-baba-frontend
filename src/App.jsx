@@ -11,6 +11,7 @@ import SeeAllPage from "./pages/SeeAllPage/SeeAllPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import OTPPage from "./pages/RegisterPage/OTPPage";
 import PayAndOrderPage from "./pages/PayAndOrderPage/PayAndOrderPage";
+import SellerPage from "./pages/SellerPage/SellerPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/contactus" element={<ContactUs/>} />
         <Route path="/see-resturant-products/:id" element={<SeeAllPage/>} />
         <Route path="/payOrder" element={<PayAndOrderPage/>} />
+        <Route path="/seller" element={<SellerPage/>} />
       
       </Routes>
     </BrowserRouter>
