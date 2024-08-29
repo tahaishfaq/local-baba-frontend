@@ -2,88 +2,105 @@ import React from "react";
 
 const ContactUsForm = () => {
   return (
-    <div className="bg-white py-8 md:py-12">
-      {/* Contact Form Section */}
-      <section className="container mx-auto px-4">
-        <div className="mb-8 text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#0D4041]">
-            Get in touch with us.
-          </h2>
-          <p className="text-xl sm:text-2xl md:text-3xl text-[#0D4041] font-bold">
-            We’re here to assist you.
-          </p>
+    <div className="bg-white pt-8 md:pt-12 font-figtree">
+      <section className="mx-auto max-w-[1440px] space-y-20">
+        <div className="text-[64px] font-bold text-[#0D4041]">
+          <h2 className="">Get in touch with us.</h2>
+          <p className="">We’re here to assist you.</p>
         </div>
 
-        <form className="mx-auto space-y-4 mb-16 max-w-lg">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="border border-gray-300 p-3 rounded-md w-full"
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="border border-gray-300 p-3 rounded-md w-full"
-            />
-            <input
-              type="text"
-              placeholder="Phone Number (optional)"
-              className="border border-gray-300 p-3 rounded-md w-full"
-            />
+        <form className="mx-auto space-y-10 ">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-9">
+            <div>
+              <label className="block text-[#004744] font-light text-lg mb-1">
+                Your Name
+              </label>
+              <input
+                type="text"
+                className="focus:ring-0 focus:outline-none border-[#CACACA]  border-t-0 border-x-0 focus:border-[#004744] w-full px-0"
+              />
+            </div>
+            <div>
+              <label className="block text-[#004744] font-light text-lg mb-1">
+                Email Address
+              </label>
+              <input
+                type="email"
+                className="focus:ring-0 focus:outline-none border-[#CACACA]  border-t-0 border-x-0 focus:border-[#004744] w-full px-0"
+              />
+            </div>
+            <div>
+              <label className="block text-[#004744] font-light text-lg mb-1">
+                Phone Number (optional)
+              </label>
+              <input
+                type="text"
+                className="focus:ring-0 focus:outline-none border-[#CACACA]  border-t-0 border-x-0 focus:border-[#004744] w-full px-0"
+              />
+            </div>
           </div>
-          <textarea
-            placeholder="Message"
-            className="border border-gray-300 p-3 rounded-md w-full h-32"
-          ></textarea>
+          <div>
+            <label className="block text-[#004744] font-light text-lg mb-1">
+              Message
+            </label>
+            <textarea
+              rows={3}
+              className="focus:ring-0 focus:outline-none border-[#CACACA]  border-t-0 border-x-0 focus:border-[#004744] w-full  px-0"
+            ></textarea>
+          </div>
           <button
             type="submit"
-            className="bg-[#FE4101] text-white py-3 px-6 rounded-full font-semibold text-lg"
+            className="bg-[#FE4101] text-white py-4 px-[32px] rounded-full font-normal text-sm "
           >
             Leave us a Message
           </button>
         </form>
       </section>
 
-      {/* Contact Info Section */}
-      <section className="container mx-auto px-4 mt-8 md:mt-12">
-        <div className="bg-gray-50 py-6 md:py-8 rounded-lg">
+      <section className="mt-16 bg-gray-50 rounded-lg py-[80px] ">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col md:flex-row justify-center md:justify-between items-start gap-8 md:gap-14">
-            <div className="w-full md:w-1/3">
-              <h4 className="font-normal text-xl sm:text-2xl md:text-3xl text-[#0D4041] mb-2">
+            <div className="max-w-xs flex flex-col items-start space-y-5">
+              <h4 className="font-normal text-xl sm:text-2xl md:text-[24px] lg:text-[24px] text-[#0D4041] mb-2">
                 Contact Info
               </h4>
 
-              <p className="text-[#0D4041] font-bold text-2xl sm:text-3xl md:text-4xl">
+              <p className="text-[#0D4041] font-bold text-2xl sm:text-3xl md:text-4xl lg:text-4xl">
                 We are always happy to assist you
               </p>
             </div>
-            <div className="w-full md:w-1/3">
-              <h4 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#0D4041] mb-4">
+            <div className="w-full max-w-xs pt-10">
+              <h4 className="text-xl sm:text-2xl md:text-[22px] lg:text-[22px] font-medium text-[#0D4041] mb-4">
                 Email Address
+                <br />
+                <span>-</span>
               </h4>
-              <p className="text-[#0D4041] text-lg sm:text-xl md:text-2xl font-semibold mb-4">
+              <p className="text-[#0D4041] text-lg sm:text-xl md:text-[22px] lg:text-[22px] font-medium mb-4">
                 help@info.com
               </p>
-              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-normal">
+
+              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
                 Assistance hours:
               </p>
-              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-normal">
-                Monday – Friday; 6 am to 8 pm EST
+              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
+                Monday – Friday: 6am to 8pm EST
               </p>
             </div>
-            <div className="w-full md:w-1/3">
-              <h4 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#0D4041] mb-4">
+            <div className="w-full max-w-xs pt-10">
+              <h4 className="text-xl sm:text-2xl md:text-[22px] lg:text-[22px] font-medium text-[#0D4041] mb-4">
                 Number
+                <br />
+                <span>-</span>
               </h4>
-              <p className="text-[#0D4041] text-lg sm:text-xl md:text-2xl font-semibold mb-4">
+              <p className="text-[#0D4041] text-lg sm:text-xl md:text-[22px] lg:text-[22px] font-medium mb-4">
                 (800) 998-94256
               </p>
-              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-normal">
+
+              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
                 Assistance hours:
               </p>
-              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-normal">
-                Monday – Friday; 6 am to 8 pm EST
+              <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
+                Monday – Friday: 6 am to 8 pm EST
               </p>
             </div>
           </div>

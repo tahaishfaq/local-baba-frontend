@@ -20,11 +20,11 @@ import {  useResturant } from "../context/ResturantContext";
 //   },]
 
 
-const RestaurantCard = () => {
+const BestSellingResturant = () => {
   
   const navigate = useNavigate();
   const [selectedRestaurantId, setSelectedRestaurantId] = useState(null);
-  const {restaurants, loadingRestaurants, setSelectedRestaurant} = useResturant()
+  const {topRestaurants, loadingRestaurants, setSelectedRestaurant} = useResturant()
 
 
 
@@ -44,16 +44,16 @@ const RestaurantCard = () => {
   };
 
   return (
-    <div className="px-6 max-w-[1440px] mx-auto py-16 pb-28">
+    <div className="px-6 max-w-[1440px] mx-auto py-16">
       <h2 className="text-[36px] font-bold text-[#0D4041] pb-10">
-        Top Restaurants
+        Best Selling Restaurants
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {loadingRestaurants
           ? Array.from({ length: 9 }).map((_, index) => (
               <RestaurantCardSkeleton key={index} />
             ))
-          : restaurants?.map((restaurant) => (
+          : topRestaurants?.map((restaurant) => (
               <div
                 key={restaurant._id}
                 onClick={() => handleCardClick(restaurant)}
@@ -112,4 +112,4 @@ const RestaurantCard = () => {
   );
 };
 
-export default RestaurantCard;
+export default BestSellingResturant;

@@ -12,12 +12,13 @@ export const RestaurantProductProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [loadingRestaurants, setLoadingRestaurants] = useState(true);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [topRestaurants, setTopRestaurants] = useState([]);
 
   useEffect(() => {
     
     const fetchRestaurants = async () => {
       try {
-        const response = await axiosInstance.get("global//top-rated-restaurants");
+        const response = await axiosInstance.get("global/top-rated-restaurants");
         setRestaurants(response.data.restaurants);
         setLoadingRestaurants(false);
         
@@ -31,6 +32,27 @@ export const RestaurantProductProvider = ({ children }) => {
     fetchRestaurants();
   }, []);
 
+  useEffect(() => {
+    
+    const fetchTopRestaurants = async () => {
+      try {
+        const response = await axiosInstance.get("global/discounted-restaurants");
+        console.log(response);
+        setTopRestaurants(response.data.discountedRestaurants);
+        setLoadingRestaurants(false);
+        
+      } catch (error) {
+        console.error("Failed to fetch restaurants", error);
+        setLoadingRestaurants(false);
+        setLoadingProducts(false);
+      }
+    };
+
+    fetchTopRestaurants();
+  }, []);
+
+  
+
   return (
     <RestaurantContext.Provider
       value={{
@@ -39,6 +61,7 @@ export const RestaurantProductProvider = ({ children }) => {
         selectedRestaurant,
         setSelectedRestaurant,
         loadingRestaurants,
+        topRestaurants
       }}
     >
       {children}

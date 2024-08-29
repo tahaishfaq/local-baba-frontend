@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://local-baba-backend-production.up.railway.app/api/v1',
+  baseURL: 'https://api.localbaba.app/api/v1',
 });
 
 export const AxiosInterceptor = ({ children }) => {

@@ -1,28 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { BiSearch } from "react-icons/bi";
 import { FiMapPin } from "react-icons/fi";
-
-const dummySuggestions = [
-  "Chicken Biryani",
-  "Mutton Biryani",
-  "Paneer Butter Masala",
-  "Veg Biryani",
-  "Fish Curry",
-  // Add more items here...
-];
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (searchQuery.length > 0) {
-      const filteredSuggestions = dummySuggestions.filter((item) =>
-        item.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSuggestions(filteredSuggestions);
-      setShowSuggestions(true);
+      const fetchSuggestions = async () => {
+        try {
+          const response = await axiosInstance.get(
+            `/global/popular-search`
+          );
+          console.log(response);
+          const filteredSuggestions = response.data.popularSearches.filter(
+            (item) =>
+              item.productId.itemName
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+          );
+          setSuggestions(filteredSuggestions);
+          setShowSuggestions(true);
+        } catch (error) {
+          console.error("Error fetching suggestions:", error);
+        }
+      };
+
+      fetchSuggestions();
     } else {
       setShowSuggestions(false);
     }
@@ -33,8 +43,9 @@ export default function SearchBar() {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchQuery(suggestion);
+    setSearchQuery(suggestion.productId.itemName);
     setShowSuggestions(false);
+    navigate(`/item/${suggestion.productId._id}`);
   };
 
   return (
@@ -61,11 +72,13 @@ export default function SearchBar() {
                       className="px-4 py-2 cursor-pointer hover:bg-[#FE4101] hover:text-white"
                       onClick={() => handleSuggestionClick(suggestion)}
                     >
-                      {suggestion}
+                      {suggestion.productId.itemName}
                     </div>
                   ))
                 ) : (
-                  <div className="px-4 py-2 text-gray-500">No suggestions found</div>
+                  <div className="px-4 py-2 text-gray-500">
+                    No suggestions found
+                  </div>
                 )}
               </div>
             )}

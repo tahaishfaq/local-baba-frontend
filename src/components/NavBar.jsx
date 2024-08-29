@@ -23,15 +23,21 @@ import {
 import { RiDeleteBinLine, RiLogoutBoxLine } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
 import { MdOutlinePerson } from "react-icons/md";
+import { BsPerson } from "react-icons/bs";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const { user, loading, logout } = useAuth();
   const { cartItems } = useContext(CartContext);
   const [openCart, setOpenCart] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("Buyer");
 
   return (
-    <Disclosure as="nav" className="bg-white drop-shadow font-figtree relative z-20">
+    <Disclosure
+      as="nav"
+      className="bg-white drop-shadow font-figtree relative z-20"
+    >
       <div className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-0">
         <div className="flex justify-between py-[16px]">
           <div className="flex">
@@ -57,7 +63,15 @@ export default function NavBar() {
               />
             </Link>
           </div>
-          <div className="flex items-center lg:gap-x-[16px]">
+
+          <div className="flex items-center lg:gap-x-[30px]">
+            <Link
+              to="/seller"
+              className="text-[#FE4101] capitalize lg:flex md:flex hidden items-center gap-x-1"
+            >
+              {" "}
+              <BsPerson className="w-5 h-5" /> Become a seller
+            </Link>
             {localStorage.token ? (
               <Popover className="relative">
                 <PopoverButton className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
@@ -172,17 +186,6 @@ export default function NavBar() {
               </Popover>
             ) : (
               <div className="flex-shrink-0 space-x-3">
-                
-                
-                <button
-                  type="button"
-                  onClick={() => navigate("/seller")}
-                  className="relative inline-flex items-center justify-center gap-x-1.5   text-[#e03901] lg:px-6 md:px-8 px-6 lg:py-3 md:py-3 py-1.5 text-sm font-normal"
-                >
-                  <MdOutlinePerson className="text-base text-[#e03901]" />
-                  Become a seller
-                </button>
-                
                 <button
                   type="button"
                   onClick={() => navigate("/login")}
@@ -199,24 +202,82 @@ export default function NavBar() {
                 </button>
               </div>
             )}
-            <div
-              className="flex flex-shrink-0 items-center lg:border-l md:border-l border-[#0D4041]"
-              onClick={() => setOpenCart(true)}
-            >
-              <button
-                type="button"
-                className="flex flex-row lg:space-x-2 space-x-1.5 relative rounded-full bg-white p-1 text-[#0D4041] focus:outline-none ring-0 font-figtree"
+            <div className="flex items-center gap-x-3">
+              <div
+                className="flex flex-shrink-0 items-center lg:border-l md:border-l border-[#949494]"
+                onClick={() => setOpenCart(true)}
               >
-                <span className="absolute -inset-1.5" />
-                <span className="sr-only">View notifications</span>
-                <div className="relative">
-                  <CiShoppingCart aria-hidden="true" className="h-6 w-6" />
-                  <span className="text-xs absolute -top-1 -right-1 rounded-full bg-red-500 text-white w-4 h-4 z-50">
-                    {cartItems?.length}
+                <button
+                  type="button"
+                  className="flex flex-row lg:space-x-2 space-x-1.5 relative rounded-full bg-white p-1 text-[#0D4041] focus:outline-none ring-0 font-figtree"
+                >
+                  <span className="absolute -inset-1.5" />
+                  <span className="sr-only">View notifications</span>
+                  <div className="relative">
+                    <CiShoppingCart aria-hidden="true" className="h-6 w-6" />
+                    <span className="text-xs absolute -top-1 -right-1 rounded-full bg-red-500 text-white w-4 h-4 z-50">
+                      {cartItems?.length}
+                    </span>
+                  </div>
+                  <span className="font-figtree">Cart</span>
+                </button>
+              </div>
+
+              <div
+                className="lg:flex md:flex hidden flex-shrink-0 items-center lg:border-l md:border-l border-[#949494] p-1 pl-4"
+                onClick={() => setOpenDropdown((prev) => !prev)}
+              >
+                <div className="flex items-center gap-x-1 cursor-pointer">
+                  <span className="text-[#434343] text-md font-normal ">
+                    {selectedUser}
+                  </span>
+                  <span className="text-[#434343]">
+                    {openDropdown ? (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        ></path>
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 15l7-7 7 7"
+                        ></path>
+                      </svg>
+                    )}
                   </span>
                 </div>
-                <span className="font-figtree">Cart</span>
-              </button>
+                {openDropdown && (
+                  <div className="absolute mt-2 top-1/2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    <div className="py-1">
+                      <span
+                        onClick={() => setSelectedUser(selectedUser === "Seller" ? "Buyer" : "Seller")}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                      >
+                        {selectedUser === "Seller" ? "Buyer" : "Seller"} 
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

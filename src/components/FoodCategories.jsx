@@ -88,7 +88,7 @@ function Carousel() {
               <img
                 src={item?.image}
                 alt={item?.name}
-                className="w-60 h-60 object-cover object-top rounded-full bg-gray-100"
+                className="w-[152px] h-[152px] object-cover object-top rounded-full bg-gray-100"
               />
               <p className="mt-2 text-lg capitalize text-[#434343] font-semibold">
                 {item?.name}
@@ -101,16 +101,16 @@ function Carousel() {
       <div className="flex justify-between mt-4 md:mt-0 md:absolute md:top-1/2 md:left-0 md:right-0 md:px-10">
         <button
           onClick={handlePrev}
-          className="text-[#1C274C] bg-white rounded-full border p-2 text-3xl focus:outline-none shadow md:absolute md:-left-0 md:top-1/2 transform md:-translate-y-1/2"
+          className="text-[#1C274C] bg-white rounded-full border p-1 text-3xl focus:outline-none shadow md:absolute md:-left-0 md:top-1/2 transform md:-translate-y-1/2"
         >
-          <IoIosArrowBack />
+          <IoIosArrowBack className="w-7 h-7"/>
         </button>
 
         <button
           onClick={handleNext}
-          className="text-[#1C274C] bg-white rounded-full border p-2 text-3xl focus:outline-none shadow md:absolute md:-right-0 md:top-1/2 transform md:-translate-y-1/2"
+          className="text-[#1C274C] bg-white rounded-full border p-1 text-3xl focus:outline-none shadow md:absolute md:-right-0 md:top-1/2 transform md:-translate-y-1/2"
         >
-          <IoIosArrowForward />
+          <IoIosArrowForward className="w-7 h-7"/>
         </button>
       </div>
     </div>

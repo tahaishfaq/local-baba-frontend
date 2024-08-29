@@ -7,6 +7,7 @@ import RestaurantCard from "../../components/RestaurantCard";
 import FAQs from "../../components/FAQs";
 import Footer from "../../components/Footer";
 import Download from "../../components/Download";
+import BestSellingResturant from "../../components/BestSellingResturant";
 
 
 const HomePage = () => {
@@ -18,6 +19,7 @@ const HomePage = () => {
         <SearchBar />
         <FoodCategories />
         <RestaurantCard />
+        <BestSellingResturant/>
         <FAQs />
         <Download />
         <Footer />
