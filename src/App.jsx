@@ -12,6 +12,8 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import OTPPage from "./pages/RegisterPage/OTPPage";
 import PayAndOrderPage from "./pages/PayAndOrderPage/PayAndOrderPage";
 import SellerPage from "./pages/SellerPage/SellerPage";
+import SellerRegisterPage from "./pages/RegisterPage/SellerRegisterPage";
+import SellerLoginPage from "./pages/LoginPage/SellerLoginPage";
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
         <Route path="/item/:id" element={<ItemPage />} />
         <Route path="/order-summary" element={<OrderSummary />} /> 
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/seller-login" element={<SellerLoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/seller-register" element={<SellerRegisterPage />} />
         <Route path="/otp" element={<OTPPage />} />
         <Route path="/terms&condition" element={<TermsConditionPage/>} />
         <Route path="/aboutus" element={<AboutUsPage/>} />

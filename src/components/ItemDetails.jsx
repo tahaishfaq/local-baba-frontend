@@ -110,7 +110,7 @@ const ItemDetails = () => {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-[1440px] py-6 animate-pulse">
+      <div className="mx-auto max-w-[1440px] py-6 animate-pulse lg:px-0 px-4">
         <div className="grid grid-cols-1">
           <div className="mb-14">
             <div className="h-10 bg-gray-200 rounded mb-4 w-1/2"></div>
@@ -135,17 +135,17 @@ const ItemDetails = () => {
   if (!product) return <div>Product not found</div>;
 
   return (
-    <div className="mx-auto max-w-[1440px] py-[50px]">
+    <div className="mx-auto max-w-[1440px] lg:py-[50px] py-[30px] lg:px-0 px-4">
       <div className="grid grid-cols-1 space-y-20">
-        <div className="space-y-10">
-          <h1 className="text-4xl font-bold text-[#0D4041]  capitalize">
+        <div className="lg:space-y-10 space-y-6">
+          <h1 className="lg:text-4xl text-2xl font-bold text-[#0D4041]  capitalize">
             {product.itemName}
           </h1>
-          <div className="space-y-3">
-            <h3 className="text-[#434343] font-semibold text-lg ">
+          <div className="lg:space-y-3 space-y-1">
+            <h3 className="text-[#434343] font-semibold lg:text-lg text-base">
               Description
             </h3>
-            <p className="text-[#949494] font-medium text-sm ">
+            <p className="text-[#949494] font-medium lg:text-sm  text-xs">
               {product.description}
               {/* <span className="text-[#FE4101] font-medium text-sm">
             {" "}
@@ -153,12 +153,12 @@ const ItemDetails = () => {
           </span> */}
             </p>
           </div>
-          <div className="flex items-start space-x-4">
-            <button className="bg-white text-[#FE4101] border border-[#FE4101] py-4 px-36 font-medium text-sm rounded-full">
+          <div className="flex lg:flex-row flex-col items-start gap-4">
+            <button className="bg-white text-[#FE4101] border border-[#FE4101] py-4 lg:w-1/4 w-full px-4 font-medium text-sm rounded-full">
               Self Pickup
             </button>
             <button
-              className="bg-[#FE4101] text-white py-4 px-36 font-medium text-sm rounded-full"
+              className="bg-[#FE4101] text-white py-4 lg:w-1/4 w-full px-4 font-medium text-sm rounded-full"
               onClick={() => handleAddToCartClick(product)}
             >
               Add to Cart
@@ -166,12 +166,12 @@ const ItemDetails = () => {
           </div>
         </div>
 
-        <div className="space-y-9">
+        <div className="lg:space-y-9 space-y-6">
           <div className="flex justify-between items-center ">
-            <h2 className="text-4xl font-semibold text-[#434343]">
+            <h2 className="lg:text-4xl text-2xl font-semibold text-[#434343]">
               Best Sellings
             </h2>
-            <button className="text-[#949494] font-medium text-sm border border-[#949494] rounded-full px-10 py-3">
+            <button className="text-[#949494] font-medium text-sm border border-[#949494] rounded-full lg:px-10 px-6  lg:py-3 py-2">
               See All
             </button>
           </div>

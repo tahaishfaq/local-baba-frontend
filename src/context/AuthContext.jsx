@@ -32,9 +32,33 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const sellerLogin = async (credentials) => {
+    try {
+      const response = await axiosInstance.post("/restaurant/login", credentials);
+      console.log(response);
+      localStorage.setItem("user", JSON.stringify(response.data.restaurant));
+      localStorage.setItem("token", response?.data?.token); 
+      // setUser(response.data.user);
+      return { success: true };
+    } catch (error) {
+      console.error("Login failed", error);
+      return { success: false, message: error.response.data.message };
+    }
+  };
+
   const register = async (registrationData) => {
     try {
       const response = await axiosInstance.post("/user/register", registrationData);
+      return { success: true };
+    } catch (error) {
+      console.error("Registration failed", error);
+      return { success: false, message: error.response.data.message };
+    }
+  };
+
+  const sellerRegister = async (registrationData) => {
+    try {
+      const response = await axiosInstance.post("/restaurant/register", registrationData);
       return { success: true };
     } catch (error) {
       console.error("Registration failed", error);
@@ -81,7 +105,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, verifyOTP, resendOTP }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, verifyOTP, resendOTP, sellerRegister, sellerLogin }}>
       {children}
     </AuthContext.Provider>
   );

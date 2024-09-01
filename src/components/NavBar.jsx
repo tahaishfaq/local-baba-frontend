@@ -31,6 +31,8 @@ export default function NavBar() {
   const { cartItems } = useContext(CartContext);
   const [openCart, setOpenCart] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [openLoginDropdown, setOpeLoginDropdown] = useState(false);
+  const [openRegisterDropdown, setOpenRegisterDropdown] = useState(false);
   const [selectedUser, setSelectedUser] = useState("Buyer");
 
   return (
@@ -185,21 +187,61 @@ export default function NavBar() {
                 </PopoverPanel>
               </Popover>
             ) : (
-              <div className="flex-shrink-0 space-x-3">
-                <button
-                  type="button"
-                  onClick={() => navigate("/login")}
-                  className="relative inline-flex items-center gap-x-1.5 rounded-full border border-[#FE4101] hover:border-[#e03901] hover:text-[#e03901] lg:px-8 md:px-8 px-6 lg:py-3 md:py-3 py-1.5 text-sm font-normal text-[#FE4101] shadow-sm"
-                >
-                  Login
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate("/register")}
-                  className="relative lg:inline-flex md:inline-flex hidden items-center gap-x-1.5 rounded-full bg-[#FE4101] hover:bg-[#e03901] px-8 lg:py-3 text-sm font-normal text-white shadow-sm"
-                >
-                  Register
-                </button>
+              <div className="flex-shrink-0 flex items-center space-x-3 ">
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setOpeLoginDropdown(!openLoginDropdown)}
+                    className="relative inline-flex items-center gap-x-1.5 rounded-full border border-[#FE4101] hover:border-[#e03901] hover:text-[#e03901] lg:px-8 md:px-8 px-6 lg:py-3 md:py-3 py-1.5 text-sm font-normal text-[#FE4101] shadow-sm"
+                  >
+                    Login
+                  </button>
+                  {openLoginDropdown && (
+                    <div className="absolute top-12 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                      <div className="py-1 space-y-2">
+                        <p
+                          onClick={() => navigate("/login")}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Buyer Login
+                        </p>
+                        <p
+                          onClick={() => navigate("/seller-login")}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Seller Login
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setOpenRegisterDropdown(!openRegisterDropdown)}
+                    className="relative lg:inline-flex md:inline-flex hidden items-center gap-x-1.5 rounded-full bg-[#FE4101] hover:bg-[#e03901] px-8 lg:py-3 text-sm font-normal text-white shadow-sm"
+                  >
+                    Register
+                  </button>
+                  {openRegisterDropdown && (
+                    <div className="absolute top-12 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                      <div className="py-1 space-y-2">
+                        <p
+                          onClick={() => navigate("/register")}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Buyer Register
+                        </p>
+                        <p
+                          onClick={() => navigate("/seller-register")}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Seller Register
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             <div className="flex items-center gap-x-3">
@@ -269,10 +311,14 @@ export default function NavBar() {
                   <div className="absolute mt-2 top-1/2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
                       <span
-                        onClick={() => setSelectedUser(selectedUser === "Seller" ? "Buyer" : "Seller")}
+                        onClick={() =>
+                          setSelectedUser(
+                            selectedUser === "Seller" ? "Buyer" : "Seller"
+                          )
+                        }
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                       >
-                        {selectedUser === "Seller" ? "Buyer" : "Seller"} 
+                        {selectedUser === "Seller" ? "Buyer" : "Seller"}
                       </span>
                     </div>
                   </div>

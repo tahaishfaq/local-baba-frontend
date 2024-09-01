@@ -7,14 +7,24 @@ import { useSeller } from "../context/SellerContext"; // Importing Formik contex
 const Step3 = ({ onNext }) => {
   const { formik } = useSeller(); // Use Formik context
   const progress = 60;
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null); // State for file preview
+
+  const MAX_FILE_SIZE_MB = 5;
 
   // Handle file upload and preview
-  const handleImageChange = (event) => {
+  const handleFileChange = (event) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      formik.setFieldValue("menuDoc", file); // Set Formik field value
-      setSelectedImage(URL.createObjectURL(file));
+
+      // Check if file size exceeds the maximum limit
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        alert(`File size exceeds ${MAX_FILE_SIZE_MB} MB. Please upload a smaller file.`);
+        return;
+      }
+
+      // Set Formik field value
+      formik.setFieldValue("menuDoc", file);
+      setSelectedFile(file);
     }
   };
 
@@ -23,10 +33,24 @@ const Step3 = ({ onNext }) => {
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
-      formik.setFieldValue("menuDoc", file); // Set Formik field value
-      setSelectedImage(URL.createObjectURL(file));
+
+      // Check if file size exceeds the maximum limit
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        alert(`File size exceeds ${MAX_FILE_SIZE_MB} MB. Please upload a smaller file.`);
+        return;
+      }
+
+      // Set Formik field value
+      formik.setFieldValue("menuDoc", file);
+      setSelectedFile(file);
       event.dataTransfer.clearData();
     }
+  };
+
+  // Handle category selection
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    formik.setFieldValue("foodType", category); // Set Formik field value
   };
 
   return (
@@ -50,11 +74,11 @@ const Step3 = ({ onNext }) => {
             Food Category
           </label>
           <div className="grid grid-cols-1 gap-4">
-            {["veg", "non-veg", "both"].map((category) => (
+            {["Veg", "Non-Veg", "Both"].map((category) => (
               <label
                 key={category}
                 className={`flex items-center space-x-3 border ${
-                  selectedCategory === category
+                  formik.values.foodType === category
                     ? "border-[#FE4101]"
                     : "border-[#E6E6E6]"
                 } p-4 rounded-lg cursor-pointer`}
@@ -63,20 +87,18 @@ const Step3 = ({ onNext }) => {
                   type="radio"
                   name="category"
                   value={category}
-                  checked={selectedCategory === category}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  checked={formik.values.foodType === category}
+                  onChange={handleCategoryChange}
                   className="form-radio text-[#FE4101] focus:ring-[#FE4101]"
                 />
                 <span
                   className={`${
-                    selectedCategory === category
+                    formik.values.foodType === category
                       ? "text-[#FE4101]"
                       : "text-[#949494]"
                   } font-normal text-sm capitalize`}
                 >
-                  {category === "non-veg"
-                    ? "Non Veg"
-                    : category.charAt(0).toUpperCase() + category.slice(1)}
+                  {category}
                 </span>
               </label>
             ))}
@@ -87,17 +109,21 @@ const Step3 = ({ onNext }) => {
         <div className="space-y-[20px] pt-5">
           <h4 className="text-lg font-semibold text-[#434343]">Upload Menu</h4>
           <div
-            className="border-dashed border-2 border-gray-300 rounded-[19px] px-8 py-6 text-center w-full sm:max-w-sm  cursor-pointer"
+            className="border-dashed border-2 border-gray-300 rounded-[19px] px-8 py-6 text-center w-full sm:max-w-sm cursor-pointer"
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            onClick={() => document.getElementById("imageUpload").click()}
+            onClick={() => document.getElementById("fileUpload").click()}
           >
-            {formik.values.menuDoc ? (
-              <img
-                src={URL.createObjectURL(formik.values.menuDoc)}
-                alt="Uploaded"
-                className="mx-auto mb-4 max-h-40"
-              />
+            {selectedFile ? (
+              <div className="flex items-center justify-center flex-col">
+                <CiFileOn className="text-[#FE4101] w-12 h-12 mb-4" />
+                <p className="text-[#FE4101] font-normal text-lg">
+                  {selectedFile.name}
+                </p>
+                <p className="text-[#636363] text-sm">
+                  {Math.round(selectedFile.size / 1024)} KB
+                </p>
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#FFF1EB] mb-[15px]">
@@ -114,10 +140,10 @@ const Step3 = ({ onNext }) => {
             )}
             <input
               type="file"
-              accept="image/*"
+              accept=".pdf,.doc,.docx"
               className="hidden"
-              onChange={handleImageChange}
-              id="imageUpload"
+              onChange={handleFileChange}
+              id="fileUpload"
             />
           </div>
         </div>

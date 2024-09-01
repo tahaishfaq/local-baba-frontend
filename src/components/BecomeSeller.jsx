@@ -68,6 +68,14 @@ const BecomeSeller = ({ onNext }) => {
             />
             <input
               type="text"
+              name="state"
+              placeholder="State"
+              value={formik.values.state}
+              onChange={formik.handleChange}
+              className="border text-[#949494] text-sm font-normal border-[#E6E6E6] rounded-[12px] p-[15px] focus:ring-0 focus:outline-none focus:border-[#0D4041]"
+            />
+            <input
+              type="text"
               name="address"
               placeholder="Address"
               value={formik.values.address}

@@ -17,9 +17,18 @@ const SellerStep2 = ({ onNext }) => {
     fssaiDoc: { file: null, status: "idle", progress: 0 },
   });
 
+  const MAX_FILE_SIZE_MB = 3;
+
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
+      // Check if the file size exceeds the 3MB limit
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > MAX_FILE_SIZE_MB) {
+        alert("File size exceeds 3MB. Please upload a smaller file.");
+        return;
+      }
+
       setFiles((prevFiles) => ({
         ...prevFiles,
         [type]: { file, status: "uploading", progress: 0 },
@@ -225,7 +234,7 @@ const SellerStep2 = ({ onNext }) => {
                       <span className="text-[#636363]">or drag and drop</span>
                     </p>
                     <p className="text-[#636363] text-sm">
-                      (Max. File size: 5 MB)
+                      (Max. File size: 3 MB)
                     </p>
 
                     <input
@@ -336,3 +345,4 @@ const SellerStep2 = ({ onNext }) => {
 };
 
 export default SellerStep2;
+

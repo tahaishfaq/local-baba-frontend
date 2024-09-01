@@ -196,7 +196,7 @@ export default function Register() {
 
             <div className="text-[#949494] flex flex-wrap justify-center gap-x-[5px] text-[14px]">
               Already have an account?
-              <Link to="/login" className="text-[#FE4101] font-semibold">
+              <Link to="/login" className="text-[#FE4101] font-normal">
                 Login
               </Link>
             </div>
