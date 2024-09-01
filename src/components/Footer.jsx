@@ -118,7 +118,7 @@ export default function Footer() {
                 <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Company
                 </h3>
-                <ul role="list" className="mt-6 space-y-2.5">
+                <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.Company.map((item) => (
                     <li key={item.name}>
                       <a
@@ -135,7 +135,7 @@ export default function Footer() {
                 <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Contact Us
                 </h3>
-                <ul role="list" className="mt-6 space-y-2.5">
+                <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.ContactUs.map((item) => (
                     <li key={item.name}>
                       <a
@@ -154,7 +154,7 @@ export default function Footer() {
                 <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Legal
                 </h3>
-                <ul role="list" className="mt-6 space-y-2.5">
+                <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
                       <a
@@ -171,7 +171,7 @@ export default function Footer() {
                 <h3 className="text-[20px] font-semibold leading-6 text-[#0D4041]">
                   Downloads
                 </h3>
-                <ul role="list" className="mt-6 space-y-2.5">
+                <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.Downloads.map((item) => (
                     <li key={item.name}>
                       <a
@@ -188,17 +188,15 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-16 border-t border-[#D4D2E3] pt-8 sm:mt-20 lg:mt-24">
-          <p className=" flex justify-center items-center font-normal text-[16px]  leading-5 text-[#434343]">
-            {" "}
+          <p className="text-center font-normal text-sm sm:text-base lg:text-lg leading-5 text-[#434343]">
             Copyright &copy; 2024 Local Baba&nbsp; | &nbsp;All Rights Reserved
             &nbsp;|
             <span className="text-[#949494] hover:underline cursor-pointer">
-              {" "}
-              &nbsp; Terms and Conditions&nbsp;{" "}
-            </span>{" "}
-            |{" "}
+              &nbsp; Terms and Conditions&nbsp;
+            </span>
+            |
             <span className="text-[#949494] hover:underline cursor-pointer">
-              &nbsp; Privacy Policy{" "}
+              &nbsp; Privacy Policy&nbsp;
             </span>
           </p>
         </div>

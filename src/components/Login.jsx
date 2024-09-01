@@ -53,8 +53,8 @@ export default function Login() {
       <div className="flex min-h-full flex-1 flex-col justify-center lg:py-12 py-0 sm:px-6 lg:px-8">
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[592px]">
           <div className="bg-white px-6 lg:py-12 py-0 lg:drop-shadow-md lg:rounded-[24px] sm:px-12 lg:border space-y-[30px]">
-            <div className="flex flex-col items-start gap-y-6">
-              <h2 className="text-[36px] font-bold text-[#0D4041] ">
+            <div className="flex flex-col items-start gap-y-3 lg:gap-y-6">
+              <h2 className="lg:text-[36px] text-3xl font-bold text-[#0D4041] ">
                 Buyer Login
               </h2>
               <span className="text-[#949494] text-[14px] font-light">

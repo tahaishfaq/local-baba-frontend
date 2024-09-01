@@ -235,7 +235,7 @@ const CartItem = ({ item }) => {
           <h3 className="text-sm font-semibold text-[#434343] mb-1 capitalize">
             {item.itemName}
           </h3>
-          <p className="text-xs font-semibold text-[#434343] mb-1 w-full sm:w-48 truncate">
+          <p className="text-xs  font-semibold text-[#434343] mb-1 w-28 lg:w-48 truncate">
             {item?.description}
           </p>
         </div>

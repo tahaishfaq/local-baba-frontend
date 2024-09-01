@@ -44,8 +44,8 @@ const BestSellingResturant = () => {
   };
 
   return (
-    <div className="px-6 max-w-[1440px] mx-auto py-16">
-      <h2 className="text-[36px] font-bold text-[#0D4041] pb-10">
+    <div className="lg:px-6 px-4 max-w-[1440px] mx-auto py-16">
+      <h2 className="lg:text-[36px] text-2xl font-bold text-[#0D4041] lg:pb-10 pb-6">
         Best Selling Restaurants
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

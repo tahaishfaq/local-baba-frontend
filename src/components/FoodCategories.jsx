@@ -73,8 +73,8 @@ function Carousel() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-[70px] relative font-figtree md:overflow-hidden md:z-[-10000]">
-      <h1 className="font-bold text-4xl mb-7 text-[#434343]">
+    <div className="max-w-7xl mx-auto py-[70px] relative font-figtree md:overflow-hidden md:z-[-10000] lg:px-0 px-4">
+      <h1 className="font-bold lg:text-4xl text-2xl mb-7 text-[#434343]">
         Food Categories
       </h1>
 

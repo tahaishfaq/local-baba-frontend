@@ -113,7 +113,7 @@ const CartItem = ({ item }) => {
     <img
       src={item.image}
       alt={item.itemName}
-      className="lg:w-[100px] lg:h-[90px]  object-cover rounded-lg bg-gray-100"
+      className="lg:w-[100px] lg:h-[90px] w-16 h-12  object-cover rounded-lg bg-gray-100"
     />
     <div className="flex-1 flex flex-col justify-between">
       <div className="flex items-start justify-between">

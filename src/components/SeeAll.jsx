@@ -223,7 +223,7 @@ const SeeAllRestaurant = () => {
   return loading ? (
     <SeeAllRestaurantSkeleton />
   ) : (
-    <div className="space-y-16 mx-auto max-w-[1440px] lg:py-24 md:py-20 py-4 lg:px-0 px-4 ">
+    <div className="space-y-16 mx-auto max-w-[1440px] lg:py-24 py-16  lg:px-0 px-4 ">
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row justify-between">
           <div className="flex items-center gap-x-4">

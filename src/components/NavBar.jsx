@@ -88,7 +88,7 @@ export default function NavBar() {
 
                 <PopoverPanel
                   transition
-                  className="absolute z-30 w-screen max-w-sm right-0 bg-white drop-shadow-md border rounded-xl p-4"
+                  className="absolute z-30 w-screen lg:max-w-sm max-w-xs lg:right-0 -right-10 bg-white drop-shadow-md border rounded-xl lg:p-4 p-2"
                 >
                   {/* User Info */}
                   <div className="flex items-center gap-4 p-4 border-b">

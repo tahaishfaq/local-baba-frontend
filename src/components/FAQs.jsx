@@ -31,13 +31,13 @@ const FAQ = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto my-20 px-4">
+    <div className="max-w-4xl mx-auto lg:my-20 mt-4 mb-20 px-4">
       <div className="max-w-2xl mx-auto font-figtree">
-        <div className="flex flex-col items-center gap-y-4">
-          <h2 className="text-[36px] font-bold text-center text-[#0D4041] ">
+        <div className="flex flex-col items-center gap-y-2 lg:gap-y-4">
+          <h2 className="lg:text-[36px] text-2xl font-bold text-center text-[#0D4041] ">
             Frequently Asked Questions
           </h2>
-          <p className="text-center text-[#949494] mb-10 font-normal ">
+          <p className="text-center text-[#949494] lg:text-base text-xs lg:mb-10 mb-5 font-normal lg:px-0 px-4">
             Lorem ipsum dolor sit amet consectetur adipiscing elit aenean id
             volutpat imperdiet quis at pellentesque nunc commodo nunc purus
             pulvinar nisi fusce.
@@ -50,11 +50,11 @@ const FAQ = () => {
             key={index}
             className={`border ${
               activeIndex === index ? "border-[#FE4101]" : "border-[#D4D2E3]"
-            } rounded-[15px] px-10 py-12 cursor-pointer`}
+            } rounded-[15px] lg:px-10 lg:py-12 p-6 cursor-pointer`}
             onClick={() => toggleFAQ(index)}
           >
             <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-semibold text-[#0D4041]">
+              <h3 className="lg:text-2xl text-base font-semibold text-[#0D4041]">
                 {faq.question}
               </h3>
               <span>
@@ -66,7 +66,7 @@ const FAQ = () => {
               </span>
             </div>
             {activeIndex === index && (
-              <p className="text-[#949494] font-normal mt-4">{faq.answer}</p>
+              <p className="text-[#949494] font-normal mt-4 ">{faq.answer}</p>
             )}
           </div>
         ))}
