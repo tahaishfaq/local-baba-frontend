@@ -7,11 +7,13 @@ import { CiMail } from "react-icons/ci";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast, Toaster } from "sonner"; // Importing sonner
 import axiosInstance from "../utils/axiosInstance";
+import ProgressBar from "./ProgressBar";
 
-export default function SellerRegister() {
+export default function SellerRegister({onNext}) {
   const { sellerRegister } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const progress = 10;
 
   const formik = useFormik({
     initialValues: {
@@ -36,7 +38,7 @@ export default function SellerRegister() {
             "Registration successful! Please check your email for OTP."
           );
           setTimeout(() => {
-            navigate("/otp");
+            navigate("/seller-otp");
           }, 500);
         } else {
           setErrors({ general: result.message });
@@ -56,25 +58,29 @@ export default function SellerRegister() {
   return (
     <>
       <Toaster richColors position="top-center" />
-      <div className="flex min-h-full flex-1 flex-col justify-center lg:py-12 py-0 sm:px-6 lg:px-8">
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[592px]">
-          <div className="bg-white px-6 lg:py-12 py-0 lg:drop-shadow-md lg:rounded-[24px] sm:px-12 lg:border space-y-[30px]">
-            <div className="flex flex-col items-start gap-y-3 lg:gap-y-6">
-              <h2 className="lg:text-[36px] text-3xl font-bold text-[#0D4041] ">
-                Seller Register
-              </h2>
-              <span className="text-[#949494] text-[14px] font-light">
-                Create your account!
-              </span>
-            </div>
+      <div className="flex justify-center items-center lg:py-[70px] py-[10px]">
+      <div className="lg:p-8 p-4 max-w-4xl w-full">
+        <div className="lg:space-y-[30px] space-y-[20px] lg:pb-5 pb-4">
+          <div className="lg:space-y-[20px] space-y-[15px]">
+            <h2 className="lg:text-[20px] text-[16px] font-normal text-[#0D4041]">
+              Step 1
+            </h2>
+            <h3 className="lg:text-2xl text-[18px] font-semibold text-[#0D4041]">
+              Seller (Partner) Registration
+            </h3>
+          </div>
+          <ProgressBar progress={progress} />
+        </div>
 
-            {formik.errors.general && (
+        <div className="lg:py-10 py-6">
+
+        {formik.errors.general && (
               <div className="text-red-500 text-sm mb-4">
                 {formik.errors.general}
               </div>
             )}
 
-            <form onSubmit={formik.handleSubmit} className="space-y-[25px]">
+            <form onSubmit={formik.handleSubmit} className="space-y-[25px] max-w-md mx-auto">
               <div>
                 <label htmlFor="email" className="sr-only">
                   Email address
@@ -144,7 +150,7 @@ export default function SellerRegister() {
             </form>
 
             <div className="flex flex-col gap-y-[30px] pt-4">
-              <div className="flex justify-center items-center">
+              {/* <div className="flex justify-center items-center">
                 <button className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#F8F8F8] px-8 py-3 text-sm font-light text-[#434343] shadow-sm">
                   <svg
                     viewBox="0 0 24 24"
@@ -170,7 +176,7 @@ export default function SellerRegister() {
                   </svg>
                   Continue with Google
                 </button>
-              </div>
+              </div> */}
 
               <div className="text-[#949494] flex flex-wrap justify-center gap-x-[5px] text-[14px]">
                 Already have an account?
@@ -179,9 +185,17 @@ export default function SellerRegister() {
                 </Link>
               </div>
             </div>
-          </div>
-        </div>
+            </div>
+        <button
+          onClick={onNext}
+          disabled={formik.isSubmitting}
+          type="button"
+          className="mt-[50px] bg-[#FE4101] text-white py-[16px] lg:w-2/5 w-full rounded-full hover:bg-[#FE4101] transition duration-300"
+        >
+          Next
+        </button>
       </div>
+    </div>
     </>
   );
 }

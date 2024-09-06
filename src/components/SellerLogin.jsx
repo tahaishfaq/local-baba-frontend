@@ -30,8 +30,8 @@ export default function SellerLogin() {
         if (result.success) {
           toast.success("Login successful!");
           setTimeout(() => {
-            navigate("/");
-          }, 500);
+            window.open("https://local-baba-restaurant.vercel.app/login", "_self")
+          }, 1000);
         } else {
           setErrors({ general: result.message });
           toast.error(result.message);

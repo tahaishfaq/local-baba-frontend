@@ -58,7 +58,7 @@ const Step3 = ({ onNext }) => {
       <div className="lg:space-y-[30px] space-y-[20px] lg:pb-5 pb-4">
         <div className="lg:space-y-[20px] space-y-[15px]">
           <h3 className="lg:text-[20px] text-[16px] font-normal text-[#0D4041]">
-            Step 3
+            Step 4
           </h3>
           <h2 className="lg:text-2xl text-[18px] font-semibold text-[#0D4041]">
             Food Category

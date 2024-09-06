@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import axiosInstance from "../utils/axiosInstance";
 
 const SellerContext = createContext();
@@ -13,6 +14,34 @@ export const SellerProvider = ({ children }) => {
   const nextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    phone: Yup.string().required("Phone number is required"),
+    city: Yup.string().required("City is required"),
+    address: Yup.string().required("Address is required"),
+    noOfEmployees: Yup.number()
+      .required("Number of employees is required")
+      .positive("Must be a positive number"),
+    cuisineType: Yup.string().required("Cuisine type is required"),
+    state: Yup.string().required("State is required"),
+    operatingHours: Yup.string().required("Operating hours are required"),
+    estimatedDeliveryTime: Yup.string().required(
+      "Estimated delivery time is required"
+    ),
+    accountHolderName: Yup.string().required("Account holder name is required"),
+    bankName: Yup.string().required("Bank name is required"),
+    accountNo: Yup.number()
+      .typeError("Account number must be a number")
+      .required("Account number is required"),
+    accountType: Yup.string().required("Account type is required"),
+    upiId: Yup.string().required("UPI ID is required"),
+    IFSCCode: Yup.string().required("IFSC code is required"),
+    letterOfUnderstanding: Yup.string().required(
+      "Letter of understanding is required"
+    ),
+    foodType: Yup.string().required("Food type is required"),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -42,12 +71,12 @@ export const SellerProvider = ({ children }) => {
       letterOfUnderstanding: "",
       foodType: "",
     },
+    validationSchema,
     onSubmit: async (values) => {
       try {
-        // Create FormData object
-        const formData = new FormData();
+        const sellerToken = localStorage.getItem("sellerToken");
 
-        // Append form values to FormData
+        const formData = new FormData();
         formData.append("name", values.name);
         formData.append("phone", values.phone);
         formData.append("city", values.city);
@@ -58,88 +87,56 @@ export const SellerProvider = ({ children }) => {
         formData.append("profile", "not available");
         formData.append("operatingHours", values.operatingHours);
         formData.append("estimatedDeliveryTime", values.estimatedDeliveryTime);
-
-        // Append files to FormData
         if (values.adharDoc) formData.append("adharDoc", values.adharDoc);
-        // if (values.gstDoc) formData.append("gstDoc", values.gstDoc);
-        // if (values.fssaiDoc) formData.append("fssaiDoc", values.fssaiDoc);
-        // if (values.panDoc) formData.append("panDoc", values.panDoc);
-        // if (values.menuDoc) formData.append("menuDoc", values.menuDoc);
 
-        // First API call
-        await axiosInstance
-          .post(`/restaurant/details`, formData, {
+        const bankGstFormData = new FormData();
+        bankGstFormData.append("gstNo", values.gstNo);
+        bankGstFormData.append("panNo", values.panNo);
+        bankGstFormData.append("accountHolderName", values.accountHolderName);
+        bankGstFormData.append("bankName", values.bankName);
+        bankGstFormData.append("accountNo", values.accountNo);
+        bankGstFormData.append("accountType", values.accountType);
+        if (values.gstDoc && values.gstDoc.type === "application/pdf") {
+          bankGstFormData.append("gstDoc", values.gstDoc, values.gstDoc.name);
+        } else {
+          bankGstFormData.append("gstDoc", ""); 
+        }
+        if (values.fssaiDoc && values.fssaiDoc.type === "application/pdf") {
+          bankGstFormData.append("fssaiDoc", values.fssaiDoc, values.fssaiDoc.name);
+        }
+        if (values.panDoc) bankGstFormData.append("panDoc", values.panDoc);
+        if (values.menuDoc) bankGstFormData.append("menuDoc", values.menuDoc);
+        bankGstFormData.append("upiId", values.upiId);
+        bankGstFormData.append("IFSCCode", values.IFSCCode);
+        bankGstFormData.append("letterOfUnderstanding", values.letterOfUnderstanding);
+        bankGstFormData.append("foodType", values.foodType);
+
+        // Execute both API calls in parallel using Promise.all
+        await Promise.all([
+          axiosInstance.post(`/restaurant/details`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${sellerToken}`,
             },
-          })
+          }),
+          axiosInstance.post("/restaurant/update-bank-gst", bankGstFormData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${sellerToken}`,
+            },
+          }),
+        ])
           .then((res) => {
-            console.log("seller1", res);
-
-            // Prepare the second FormData object for the second API call
-            const bankGstFormData = new FormData();
-            bankGstFormData.append("gstNo", values.gstNo);
-            bankGstFormData.append("panNo", values.panNo);
-            bankGstFormData.append(
-              "accountHolderName",
-              values.accountHolderName
-            );
-            bankGstFormData.append("bankName", values.bankName);
-            bankGstFormData.append("accountNo", values.accountNo);
-            bankGstFormData.append("accountType", values.accountType);
-
-            // Ensure the gstDoc is a PDF file and set MIME type correctly
-            if (values.gstDoc && values.gstDoc.type === "application/pdf") {
-              bankGstFormData.append(
-                "gstDoc",
-                values.gstDoc,
-                values.gstDoc.name
-              );
-            }
-
-            // Append other files
-            if (values.fssaiDoc && values.fssaiDoc.type === "application/pdf") {
-              bankGstFormData.append(
-                "fssaiDoc",
-                values.fssaiDoc,
-                values.gstDoc.name
-              );
-            }
-            if (values.panDoc) bankGstFormData.append("panDoc", values.panDoc);
-            if (values.menuDoc)
-              bankGstFormData.append("menuDoc", values.menuDoc);
-
-            bankGstFormData.append("upiId", values.upiId);
-            bankGstFormData.append("IFSCCode", values.IFSCCode);
-            bankGstFormData.append(
-              "letterOfUnderstanding",
-              values.letterOfUnderstanding
-            );
-            bankGstFormData.append("foodType", values.foodType);
-
-            // Second API call
-            axiosInstance
-              .post("/restaurant/update-bank-gst", bankGstFormData, {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              })
-              .then((res) => {
-                console.log("seller2", res);
-                // setSubmit(true);
-              })
-              .catch((err) => {
-                console.log(err);
-                // setSubmit(false);
-              });
+            console.log("Both requests succeeded:", res);
+            setSubmit(true);
           })
           .catch((err) => {
-            console.log(err);
+            console.error("Error in one or both requests:", err);
+            setSubmit(false);
           });
-        setSubmit(true);
       } catch (error) {
         console.error("Error submitting form:", error);
-        setSubmit(false); 
+        setSubmit(false);
       }
     },
   });

@@ -14,20 +14,29 @@ import PayAndOrderPage from "./pages/PayAndOrderPage/PayAndOrderPage";
 import SellerPage from "./pages/SellerPage/SellerPage";
 import SellerRegisterPage from "./pages/RegisterPage/SellerRegisterPage";
 import SellerLoginPage from "./pages/LoginPage/SellerLoginPage";
+import MyOrdersPage from "./pages/MyOrdersPage/MyOrdersPage";
+import OrderProgressPage from "./pages/MyOrdersPage/OrderProgressPage";
+import ChangePassword from "./pages/LoginPage/ChangePassword";
+import MyAccountPage from "./pages/MyOrdersPage/MyAccountPage";
+import SellerOTPPage from "./pages/RegisterPage/SellerOTPPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+        <Route path="/account" element={<MyAccountPage />} />
+        <Route path="/my-orders" element={<MyOrdersPage />} />
+        <Route path="/nearby-restaurants/:latitude/:longitude" element={<RestaurantDetails />} />
         <Route path="/item/:id" element={<ItemPage />} />
-        <Route path="/order-summary" element={<OrderSummary />} /> 
+        <Route path="/order-progress" element={<OrderProgressPage />} /> 
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/seller-login" element={<SellerLoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/seller-register" element={<SellerRegisterPage />} />
         <Route path="/otp" element={<OTPPage />} />
+        <Route path="/seller-otp" element={<SellerOTPPage />} />
         <Route path="/terms&condition" element={<TermsConditionPage/>} />
         <Route path="/aboutus" element={<AboutUsPage/>} />
         <Route path="/contactus" element={<ContactUs/>} />

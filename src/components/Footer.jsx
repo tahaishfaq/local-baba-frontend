@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/Local Baba Logo 1.png";
 
 const navigation = {
   Company: [
-    { name: "About", href: "#" },
-    { name: "Team", href: "#" },
+    { name: "About Us", href: "/aboutus" },
+    { name: "Contact Us", href: "/contactus" },
   ],
   ContactUs: [
     { name: "Help & Support", href: "#" },
@@ -11,7 +12,7 @@ const navigation = {
     { name: "Ride with us", href: "#" },
   ],
   legal: [
-    { name: "Terms & Conditions", href: "#" },
+    { name: "Terms & Conditions", href: "/terms&condition" },
     { name: "Cookie Policy", href: "#" },
     { name: "Privacy Policy", href: "#" },
     { name: "Investor Relations", href: "#" },
@@ -101,14 +102,14 @@ export default function Footer() {
             </p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item?.href}
                   className="text-[#FE4101] bg-[#FE410114] p-1 rounded-md"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon aria-hidden="true" className="h-6 w-6" />
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -121,12 +122,12 @@ export default function Footer() {
                 <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.Company.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href}
                         className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -138,12 +139,12 @@ export default function Footer() {
                 <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.ContactUs.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href}
                         className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -157,12 +158,12 @@ export default function Footer() {
                 <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href}
                         className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -174,12 +175,12 @@ export default function Footer() {
                 <ul role="list" className="lg:mt-6 mt-3 space-y-2.5">
                   {navigation.Downloads.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href}
                         className="text-[16px] font-light leading-6 text-[#949494] hover:text-gray-900"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

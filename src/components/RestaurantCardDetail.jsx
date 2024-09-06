@@ -8,22 +8,31 @@ const RestaurantCardDetail = () => {
   const [showPopover, setShowPopover] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { id } = useParams();
-  const [restaurant, setRestaurant] = useState(null);
+  const { latitude, longitude } = useParams();
+  const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
+    const json = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+
     axiosInstance
-      .get(`global/restaurant-products/${id}`)
+      .put(`/global/near-by`, json)
       .then((res) => {
-        console.log("single", res?.data);
-        setRestaurant(res?.data);
+        console.log("Nearby Restaurants:", res?.data);
+        if (res?.data?.nearByRestaurants === "No restaurants found") {
+          setRestaurants([]);
+        } else {
+          setRestaurants(res?.data?.nearByRestaurants);
+        }
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+  }, [latitude, longitude]);
 
   const handleAddToCart = () => {
     setShowPopover(true);
@@ -33,8 +42,8 @@ const RestaurantCardDetail = () => {
     setShowPopover(false);
   };
 
-  const handleCardClick = (itemId) => {
-    navigate(`/item/${itemId}`);
+  const handleCardClick = (restaurantId) => {
+    navigate(`/see-resturant-products/${restaurantId}`);
   };
 
   return (
@@ -52,32 +61,45 @@ const RestaurantCardDetail = () => {
             </div>
             <div className="w-24 h-8 bg-gray-200 rounded-full"></div>
           </div>
-        ) : (
-          <div className="flex justify-between items-center mx-4 border-b pb-[40px]">
-            <div className="flex items-center space-x-4">
-              <img
-                src={restaurant?.image}
-                alt="Restaurant"
-                className="w-[114px] h-[90px] rounded-[13px] bg-gray-100"
-              />
-              <div>
-                <h2 className="text-2xl font-bold text-[#0D4041]">
-                  {restaurant?.name}
-                </h2>
-                <span className="text-[#434343] font-normal flex items-center gap-x-1 text-lg">
-                  <IoIosBicycle className="w-5 h-5" />
-                  23-24 Min
-                </span>
+        ) : restaurants?.length > 0 ? (
+          restaurants?.map((restaurant, index) => (
+            <div
+              className="flex justify-between items-center mx-4 border-b pb-[40px]"
+              key={index}
+              onClick={() => handleCardClick(restaurant?._id)}
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={restaurant?.image}
+                  alt="Restaurant"
+                  className="w-[114px] h-[90px] rounded-[13px] bg-gray-100"
+                />
+                <div>
+                  <h2 className="text-2xl font-bold text-[#0D4041] capitalize">
+                    {restaurant?.name}
+                  </h2>
+                  <span className="text-[#434343] font-normal flex items-center gap-x-1 text-lg">
+                    <IoIosBicycle className="w-5 h-5" />
+                    23-24 Min
+                  </span>
+                </div>
               </div>
+              <button
+                className="text-[#949494] px-12 py-3 border rounded-full border-[#949494]"
+                onClick={() => handleCardClick(restaurant?._id)}
+              >
+                See All
+              </button>
             </div>
-            <button className="text-[#949494] px-12 py-3 border rounded-full border-[#949494]">
-              See All
-            </button>
+          ))
+        ) : (
+          <div className="flex items-center justify-center">
+            <span>No Restutrant</span>
           </div>
         )}
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-[24px] pt-[30px]">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-[24px] pt-[30px]">
           {loading
             ? Array(5)
                 .fill("")
@@ -120,7 +142,7 @@ const RestaurantCardDetail = () => {
                   </button>
                 </div>
               ))}
-        </div>
+        </div> */}
       </div>
 
       {showPopover && <Popover onClose={handleClosePopover} />}

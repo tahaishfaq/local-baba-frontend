@@ -37,8 +37,8 @@ function Carousel() {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+          slidesToShow: 3,
+          slidesToScroll: 3,
         },
       },
     ],
@@ -88,9 +88,9 @@ function Carousel() {
               <img
                 src={item?.image}
                 alt={item?.name}
-                className="w-[152px] h-[152px] object-cover object-top rounded-full bg-gray-100"
+                className="lg:w-[152px] lg:h-[152px] w-20 h-20 object-cover object-top rounded-full bg-gray-100"
               />
-              <p className="mt-2 text-lg capitalize text-[#434343] font-semibold">
+              <p className="mt-2 lg:text-lg text-sm capitalize text-[#434343] font-semibold">
                 {item?.name}
               </p>
             </div>
@@ -98,7 +98,7 @@ function Carousel() {
         ))}
       </Slider>
 
-      <div className="flex justify-between mt-4 md:mt-0 md:absolute md:top-1/2 md:left-0 md:right-0 md:px-10">
+      <div className="flex items-center justify-center  lg:justify-between gap-6 lg:mt-4 mt-6 md:mt-0 md:absolute md:top-1/2 md:left-0 md:right-0 md:px-10">
         <button
           onClick={handlePrev}
           className="text-[#1C274C] bg-white rounded-full border p-1 text-3xl focus:outline-none shadow md:absolute md:-left-0 md:top-1/2 transform md:-translate-y-1/2"

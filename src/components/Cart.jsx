@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 export default function Cart({ open, setOpen }) {
   const { cartItems } = useContext(CartContext);
   const navigate = useNavigate();
-  
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-40" onClose={setOpen}>
@@ -77,7 +77,13 @@ export default function Cart({ open, setOpen }) {
                       <div className="p-4 border-t drop-shadow-md bg-white">
                         <button
                           className="bg-[#FE4101] text-white font-medium rounded-full w-full flex justify-between items-center pr-8 pl-10 py-4"
-                          onClick={() => navigate("/payOrder")}
+                          onClick={() => {
+                            if (localStorage.token) {
+                              navigate("/payOrder");
+                            } else {
+                              navigate("/login");
+                            }
+                          }}
                         >
                           <span>Royal Chicken</span>
                           <span className="text-sm font-medium flex gap-x-1 items-center">
@@ -109,52 +115,51 @@ const CartItem = ({ item }) => {
 
   return (
     <div className="flex flex-col space-y-4 p-4 border shadow-sm rounded-lg bg-white">
-  <div className="flex items-start space-x-4">
-    <img
-      src={item.image}
-      alt={item.itemName}
-      className="lg:w-[100px] lg:h-[90px] w-16 h-12  object-cover rounded-lg bg-gray-100"
-    />
-    <div className="flex-1 flex flex-col justify-between">
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col">
-          <h3 className="text-sm font-semibold text-[#434343] capitalize">
-            {item.itemName}
-          </h3>
-          <p className="text-xs font-medium text-gray-600 w-44 truncate">
-            {item?.description}
-          </p>
-        </div>
-        <TrashIcon
-          className="text-red-500 w-4 h-4 cursor-pointer hover:text-red-600"
-          onClick={() => removeFromCart(item?._id)}
+      <div className="flex items-start space-x-4">
+        <img
+          src={item.image}
+          alt={item.itemName}
+          className="lg:w-[100px] lg:h-[90px] w-16 h-12  object-cover rounded-lg bg-gray-100"
         />
+        <div className="flex-1 flex flex-col justify-between">
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <h3 className="text-sm font-semibold text-[#434343] capitalize">
+                {item.itemName}
+              </h3>
+              <p className="text-xs font-medium text-gray-600 w-44 truncate">
+                {item?.description}
+              </p>
+            </div>
+            <TrashIcon
+              className="text-red-500 w-4 h-4 cursor-pointer hover:text-red-600"
+              onClick={() => removeFromCart(item?._id)}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <p className="text-base font-semibold text-[#434343]">
+          ₹{(item.basePrice * item.quantity).toFixed(2)}
+        </p>
+        <div className="flex items-center gap-x-3">
+          <button
+            onClick={() => decreaseQuantity(item._id)}
+            className="bg-[#FE4101] w-6 h-6 rounded-md text-white text-sm flex items-center justify-center"
+          >
+            -
+          </button>
+          <span className="text-sm font-medium text-[#434343]">
+            {item.quantity}
+          </span>
+          <button
+            onClick={() => increaseQuantity(item._id)}
+            className="bg-[#FE4101] w-6 h-6 rounded-md text-white text-sm flex items-center justify-center"
+          >
+            +
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div className="flex items-center justify-between">
-    <p className="text-base font-semibold text-[#434343]">
-      ₹{(item.basePrice * item.quantity).toFixed(2)}
-    </p>
-    <div className="flex items-center gap-x-3">
-      <button
-        onClick={() => decreaseQuantity(item._id)}
-        className="bg-[#FE4101] w-6 h-6 rounded-md text-white text-sm flex items-center justify-center"
-      >
-        -
-      </button>
-      <span className="text-sm font-medium text-[#434343]">
-        {item.quantity}
-      </span>
-      <button
-        onClick={() => increaseQuantity(item._id)}
-        className="bg-[#FE4101] w-6 h-6 rounded-md text-white text-sm flex items-center justify-center"
-      >
-        +
-      </button>
-    </div>
-  </div>
-</div>
-
   );
 };

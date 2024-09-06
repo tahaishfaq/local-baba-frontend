@@ -36,8 +36,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axiosInstance.post("/restaurant/login", credentials);
       console.log(response);
-      localStorage.setItem("user", JSON.stringify(response.data.restaurant));
-      localStorage.setItem("token", response?.data?.token); 
+      localStorage.setItem("resturant", JSON.stringify(response.data.restaurant));
+      localStorage.setItem("sellerToken", response?.data?.token); 
       // setUser(response.data.user);
       return { success: true };
     } catch (error) {
@@ -79,6 +79,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifySellerOTP = async (otp) => {
+    try {
+      const response = await axiosInstance.put("/auth/verify-otp", { OTP: otp });
+      console.log("OTP Verified", response?.data);
+      localStorage.setItem("resturant", JSON.stringify(response.data.user));
+      localStorage.setItem("sellerToken", response?.data?.token); 
+      setUser(response.data.user);
+      return { success: true };
+    } catch (error) {
+      console.error("OTP Verification failed", error);
+      return { success: false, message: error.response.data.message };
+    }
+  };
+
   const verifyOTP = async (otp) => {
     try {
       const response = await axiosInstance.put("/auth/verify-otp", { OTP: otp });
@@ -105,7 +119,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, verifyOTP, resendOTP, sellerRegister, sellerLogin }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, verifyOTP, resendOTP, sellerRegister, sellerLogin, verifySellerOTP }}>
       {children}
     </AuthContext.Provider>
   );

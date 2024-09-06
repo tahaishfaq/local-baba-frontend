@@ -6,26 +6,30 @@ import { toast, Toaster } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const Step4 = () => {
-  const { formik, setCurrentStep, submit } = useSeller(); // Use Formik context
+  const { formik, setCurrentStep } = useSeller(); // Use Formik context
   const progress = 80;
   const [showPopover, setShowPopover] = useState(false);
   const navigate = useNavigate();
 
   const handleNextClick = async () => {
     await formik.submitForm();
-
-    if (submit) {
+  
+    // Check if there are no errors after form submission
+    if (formik.isValid && !formik.isSubmitting) {
       setShowPopover(true);
     } else {
-      toast.error("Try Again");
-      setCurrentStep(1);
+      toast.error("Please fill the required fields");
+
+      setTimeout(() => {
+        setCurrentStep(2);
+      }, 2000);
     }
   };
 
   const handleClosePopover = () => {
     setShowPopover(false);
     setTimeout(() => {
-      navigate("/seller-login");
+      navigate("/");
     }, 500);
   };
 
@@ -37,7 +41,7 @@ const Step4 = () => {
         <div className="lg:space-y-[30px] space-y-[20px] lg:pb-5 pb-4">
           <div className="lg:space-y-[20px] space-y-[15px]">
             <h3 className="lg:text-[20px] text-[16px] font-normal text-[#0D4041]">
-              Step 4
+              Step 5
             </h3>
             <h2 className="lg:text-2xl text-[18px] font-semibold text-[#0D4041]">
               Partner Contract
@@ -53,14 +57,18 @@ const Step4 = () => {
               <input
                 type="checkbox"
                 name="agreement"
-                checked={formik.values.agreement}
-                onChange={formik.handleChange}
+                {...formik.getFieldProps("agreement")}
                 className="form-checkbox text-[#FE4101] rounded-[6px] border border-[#949494] focus:ring-0 h-6 w-6"
               />
               <span className="text-[#434343] font-normal text-[18px]">
                 Confirm your agreement to give a 15% commission to Local Baba.
               </span>
             </label>
+            {formik.touched.agreement && formik.errors.agreement && (
+              <div className="text-red-500 text-sm">
+                {formik.errors.agreement}
+              </div>
+            )}
           </div>
 
           {/* Letter of Understanding */}
@@ -71,11 +79,16 @@ const Step4 = () => {
             <textarea
               rows={6}
               name="letterOfUnderstanding"
-              value={formik.values.letterOfUnderstanding}
-              onChange={formik.handleChange}
+              {...formik.getFieldProps("letterOfUnderstanding")}
               className="w-full p-4 border border-[#E6E6E6] text-[#949494] font-normal text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-[#0D4041]"
               placeholder="Letter of Understanding"
             ></textarea>
+            {formik.touched.letterOfUnderstanding &&
+              formik.errors.letterOfUnderstanding && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.letterOfUnderstanding}
+                </div>
+              )}
           </div>
 
           {/* Next Button */}

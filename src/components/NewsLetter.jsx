@@ -3,7 +3,7 @@ export default function NewsLetter() {
     <div className="bg-[#FE4101] py-16 sm:py-24 lg:py-32 font-figtree">
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-6 lg:grid-cols-12 lg:gap-8 lg:px-8 items-center">
         <div className="max-w-lg text-3xl font-bold  text-gray-900 sm:text-4xl lg:col-span-7 space-y-5">
-          <h2 className="inline text-4xl font-bold text-[#FFFFFF] mb-4 sm:block lg:inline xl:block">
+          <h2 className="inline lg:text-4xl text-2xl font-bold text-[#FFFFFF] mb-4 sm:block lg:inline xl:block">
             Subcribe to our Newsletter
           </h2>{" "}
           <div className="max-w-md">
@@ -26,7 +26,7 @@ export default function NewsLetter() {
               required
               placeholder="Enter your email"
               autoComplete="email"
-              className="w-full py-5 pl-8 pr-[100px] bg-[#FFFFFF26] placeholder-white text-[#FFFFFF] rounded-full border-0 font-light focus:outline-none focus:ring-0"
+              className="w-full lg:py-5 py-4 pl-8 pr-[100px] bg-[#FFFFFF26] placeholder-white text-[#FFFFFF] rounded-full border-0 font-light focus:outline-none focus:ring-0"
             />
             <button
               type="submit"

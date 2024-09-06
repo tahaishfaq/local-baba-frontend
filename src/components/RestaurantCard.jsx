@@ -48,7 +48,7 @@ const RestaurantCard = () => {
       <h2 className="lg:text-[36px] text-2xl font-bold text-[#0D4041] lg:pb-10 pb-6">
         Top Restaurants
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 gap-2">
         {loadingRestaurants
           ? Array.from({ length: 9 }).map((_, index) => (
               <RestaurantCardSkeleton key={index} />
@@ -67,7 +67,7 @@ const RestaurantCard = () => {
                   <img
                     src={restaurant.image}
                     alt={restaurant.name}
-                    className="w-full h-64 object-cover rounded-xl"
+                    className="w-full lg:h-64 h-32 object-center object-cover rounded-xl"
                   />
                   {restaurant.tag && (
                     <span className="absolute top-2 left-2 bg-[#007AFF] text-white text-xs font-semibold px-2 py-1 rounded-full">
@@ -92,11 +92,11 @@ const RestaurantCard = () => {
                   )}
                 </div>
                 <div className="py-4 flex flex-col items-start gap-y-2">
-                  <h3 className="text-lg text-[#0D4041] font-semibold">
-                    {restaurant.name}
+                  <h3 className="lg:text-lg text-base text-[#0D4041] font-semibold capitalize">
+                    {restaurant.name ? restaurant.name : "---"}
                   </h3>
                   <p className="text-sm font-light text-[#434343]">
-                    {restaurant.cuisineType}
+                    {restaurant.cuisineType ? restaurant.cuisineType : "---"}
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-[#0D4041] flex items-center gap-x-1.5">

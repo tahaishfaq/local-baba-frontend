@@ -1,15 +1,24 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import { BsCash } from "react-icons/bs";
 import { SiRazorpay } from "react-icons/si";
 import axiosInstance from "../utils/axiosInstance";
 import { toast, Toaster } from "sonner";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const PayAndOrder = () => {
   const { cartItems, clearCart } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState("cash"); // Default to Cash on Delivery
   const [loading, setLoading] = useState(false);
+  const [states, setStates] = useState([]); // State to store fetched states
+  const [shippingInfo, setShippingInfo] = useState({
+    streetAddress: "",
+    zipCode: "",
+    state: "",
+  });
+  const [orderNotes, setOrderNotes] = useState("");
   const navigate = useNavigate();
 
   const subtotal = cartItems.reduce(
@@ -20,7 +29,107 @@ const PayAndOrder = () => {
   const discount = 10;
   const total = subtotal + deliveryCharges - discount;
 
+  const { user } = useAuth();
+  console.log("user", user);
+
+  // Fetch states of India
+  useEffect(() => {
+    axios
+      .post("https://countriesnow.space/api/v0.1/countries/states", {
+        country: "India",
+      })
+      .then((response) => {
+        setStates(response.data.data.states);
+      })
+      .catch((error) => console.error("Error fetching states:", error));
+  }, []);
+
   const handlePlaceOrder = async () => {
+    if (paymentMethod === "online") {
+      // If Razorpay is selected, initiate the payment process
+      await handleRazorpayPayment();
+    } else {
+      // Proceed with Cash on Delivery order placement
+      await placeOrder("cod");
+    }
+  };
+
+  const handleRazorpayPayment = async () => {
+    try {
+      setLoading(true);
+
+      if (!window.Razorpay) {
+        toast.error("Payment gateway is not loaded. Please try again later.");
+        setLoading(false);
+        return;
+      }
+
+      // Ensure the amount is converted to paise and is an integer
+      const amountInPaise = Math.round(total * 100); // Convert the total amount to paise (INR * 100)
+
+      // Create an order on the server
+      const { data: orderData } = await axiosInstance.post(
+        "/payment/create-order",
+        {
+          amount: amountInPaise, // Send amount in paise
+        }
+      );
+
+      const options = {
+        key: "rzp_test_qA3Fj4OcAMNXbG", // Your Razorpay Key ID
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "local baba",
+        description: "Test Transaction",
+        image: "https://example.com/your_logo", // Replace with your logo URL
+        order_id: orderData.id,
+        handler: async function (response) {
+          // Verify payment on the server
+          try {
+            const { data: verificationData } = await axiosInstance.post(
+              "/payment/verify-payment",
+              {
+                order_id: response.razorpay_order_id,
+                payment_id: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }
+            );
+
+            if (verificationData.success) {
+              await placeOrder("online", response); // Place the order if payment is successful
+              toast.success("Payment successful and order placed!");
+            } else {
+              toast.error("Payment verification failed. Please try again.");
+            }
+          } catch (verificationError) {
+            console.error("Error verifying payment:", verificationError);
+            toast.error("Payment verification failed. Please try again.");
+          }
+        },
+        prefill: {
+          name: user.name, // Prefill user details
+          email: user.email, // Prefill user details
+          contact: user.contact || "9999999999", // Use user's contact or a default value
+        },
+        notes: {
+          address: "Corporate Office",
+        },
+        theme: {
+          color: "#FE4101", // Customize the theme color
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Error in Razorpay payment:", error);
+      toast.error("Payment failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const placeOrder = async (method, razorpayResponse = null) => {
     const orderData = {
       orderItem: cartItems.map((item) => ({
         name: item.itemName,
@@ -30,33 +139,62 @@ const PayAndOrder = () => {
         product: item._id,
       })),
       paymentInfo: {
-        status: "unpaid",
-        paymentMethod: paymentMethod === "cash" ? "cod" : "online",
+        status: method === "cod" ? "unpaid" : "paid",
+        paymentMethod: method,
+        id: razorpayResponse?.razorpay_payment_id,
+        // razorpayOrderId: razorpayResponse?.razorpay_order_id,
+        // razorpaySignature: razorpayResponse?.razorpay_signature,
       },
       paidAt: new Date().toISOString(),
       itemsPrice: subtotal,
       taxPrice: 1.5,
       shippingPrice: deliveryCharges,
       totalPrice: total,
+      shippingInfo: shippingInfo,
+      orderNotes: orderNotes,
     };
 
     try {
-      setLoading(true);
       await axiosInstance.post("user/place-order", orderData).then((res) => {
-        console.log("placeOrder", res?.data);
         toast.success("Order Placed Successfully");
         clearCart();
-
         setTimeout(() => {
-          navigate("/");
+          navigate("/my-orders");
         }, 500);
       });
     } catch (error) {
       console.error("Error placing order:", error);
-      toast.error("Placing Order Failed");
-    } finally {
-      setLoading(false);
+      toast.error("Please Login to Place Order");
     }
+  };
+
+  const handleShippingInfoChange = (e) => {
+    const { name, value } = e.target;
+    setShippingInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
+
+  const handleSaveAddress = () => {
+    const savedAddresses =
+      JSON.parse(localStorage.getItem("shippingAddresses")) || [];
+    savedAddresses.push(shippingInfo);
+    localStorage.setItem("shippingAddresses", JSON.stringify(savedAddresses));
+    toast.success("Address saved successfully!");
+  };
+
+  useEffect(() => {
+    const savedAddresses =
+      JSON.parse(localStorage.getItem("shippingAddresses")) || [];
+    if (savedAddresses.length > 0) {
+      setShippingInfo(savedAddresses[0]);
+    }
+  }, []);
+
+  const handleAddressSelect = (e) => {
+    const selectedAddress = JSON.parse(e.target.value);
+    setShippingInfo(selectedAddress);
   };
 
   return (
@@ -71,13 +209,39 @@ const PayAndOrder = () => {
               <h2 className="text-2xl font-semibold text-[#0D4041]">
                 Shipping Address
               </h2>
+
+              {/* Address Dropdown */}
+              <div className="mt-4">
+                <label className="block text-[#0D4041] font-normal mb-2">
+                  Select Saved Address
+                </label>
+                <select
+                  onChange={handleAddressSelect}
+                  className="block w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm font-light"
+                >
+                  <option value="">Select an Address</option>
+                  {JSON.parse(localStorage.getItem("shippingAddresses"))?.map(
+                    (address, index) => (
+                      <option key={index} value={JSON.stringify(address)}>
+                        {address.streetAddress}, {address.state},{" "}
+                        {address.zipCode}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+
+              {/* Address Form */}
               <div className="mt-4 space-y-6">
                 <div>
                   <label className="block text-[#0D4041] font-normal mb-2">
                     Street Address
                   </label>
                   <textarea
+                    name="streetAddress"
                     placeholder="Enter Street Address"
+                    value={shippingInfo.streetAddress}
+                    onChange={handleShippingInfoChange}
                     className="block w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm font-light"
                     rows="3"
                   />
@@ -89,7 +253,10 @@ const PayAndOrder = () => {
                     </label>
                     <input
                       type="text"
+                      name="zipCode"
                       placeholder="Zip Code"
+                      value={shippingInfo.zipCode}
+                      onChange={handleShippingInfoChange}
                       className="block w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm font-light"
                     />
                   </div>
@@ -97,14 +264,25 @@ const PayAndOrder = () => {
                     <label className="block text-[#0D4041] font-normal mb-2">
                       State
                     </label>
-                    <select className="block w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm font-light">
+                    <select
+                      name="state"
+                      value={shippingInfo.state}
+                      onChange={handleShippingInfoChange}
+                      className="block w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm font-light"
+                    >
                       <option>Select</option>
-                      <option>USA</option>
-                      <option>England</option>
+                      {states.map((state, index) => (
+                        <option key={index} value={state.name}>
+                          {state.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
-                <button className="mt-4 w-full sm:w-auto px-8 py-3 bg-[#FE4101] text-white rounded-full">
+                <button
+                  className="mt-4 w-full sm:w-auto px-8 py-3 bg-[#FE4101] text-white rounded-full"
+                  onClick={handleSaveAddress}
+                >
                   Save Address
                 </button>
               </div>
@@ -122,7 +300,10 @@ const PayAndOrder = () => {
                   Order Notes (Optional)
                 </label>
                 <textarea
+                  name="orderNotes"
                   placeholder="Notes About Your Order, E.G. Special Notes For Delivery"
+                  value={orderNotes}
+                  onChange={(e) => setOrderNotes(e.target.value)}
                   className="block w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 text-[#434343] focus:ring-1 focus:ring-inset focus:ring-[#FE4101] sm:text-sm font-light"
                   rows="4"
                 />
@@ -171,11 +352,17 @@ const PayAndOrder = () => {
                       Payment Method
                     </h2>
                     <div className="space-y-4">
-                      <label className="flex items-center space-x-2 font-light">
+                      <label
+                        className={`flex items-center space-x-2 font-light p-3 rounded-lg ${
+                          paymentMethod === "cash"
+                            ? "border-2 border-white"
+                            : ""
+                        }`}
+                      >
                         <input
                           type="radio"
                           name="paymentMethod"
-                          className="text-[#FE4101]"
+                          className="text-[#434343]"
                           value="cash"
                           checked={paymentMethod === "cash"}
                           onChange={(e) => setPaymentMethod(e.target.value)}
@@ -185,11 +372,17 @@ const PayAndOrder = () => {
                         </span>
                         <span>Cash On Delivery</span>
                       </label>
-                      <label className="flex items-center space-x-2 font-light">
+                      <label
+                        className={`flex items-center space-x-2 font-light p-3 rounded-lg ${
+                          paymentMethod === "online"
+                            ? "border-2 border-white"
+                            : ""
+                        }`}
+                      >
                         <input
                           type="radio"
                           name="paymentMethod"
-                          className="text-[#FE4101]"
+                          className="text-[#434343]"
                           value="online"
                           checked={paymentMethod === "online"}
                           onChange={(e) => setPaymentMethod(e.target.value)}
