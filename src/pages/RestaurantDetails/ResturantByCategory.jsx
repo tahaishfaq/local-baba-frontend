@@ -3,14 +3,15 @@ import NavBar from '../../components/NavBar'
 import SearchBar from '../../components/SearchBar'
 import Footer from '../../components/Footer'
 import RestaurantCardDetail from '../../components/RestaurantCardDetail'
-import Breadcrumb from '../../components/BreadCrumb'
+
 import ResturantCategory from '../../components/ResturantCategory'
+import BreadCrumb from '../../components/BreadCrumb'
 
 const ResturantByCategory = () => {
   return (
     <div className='font-figtree'>
     <NavBar />
-    <Breadcrumb/>
+    <BreadCrumb/>
     <SearchBar />
     <ResturantCategory/>
     <Footer />

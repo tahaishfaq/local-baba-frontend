@@ -2,11 +2,11 @@ import React from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
 
-const Breadcrumb = () => {
+const BreadCrumb = () => {
   const location = useLocation();
 
   // Split the pathname into an array of paths
-  const pathnames = location.pathname.split("/").filter((x) => x);
+  const pathnames = location?.pathname?.split("/").filter((x) => x);
 
   return (
     <div className="max-w-[1440px] mx-auto pt-[60px] pb-[30px]">
@@ -17,9 +17,9 @@ const Breadcrumb = () => {
             Home
           </Link>
         </li>
-        {pathnames.map((value, index) => {
-          const isLast = index === pathnames.length - 1;
-          const to = `/${pathnames.slice(0, index + 1).join("/")}`;
+        {pathnames?.map((value, index) => {
+          const isLast = index === pathnames?.length - 1;
+          const to = `/${pathnames?.slice(0, index + 1).join("/")}`;
 
           return (
             <li key={to} className="flex items-center capitalize">
@@ -42,4 +42,4 @@ const Breadcrumb = () => {
   );
 };
 
-export default Breadcrumb;
+export default BreadCrumb;
