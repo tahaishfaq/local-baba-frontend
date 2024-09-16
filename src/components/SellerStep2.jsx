@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProgressBar from "./ProgressBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { CiFileOn } from "react-icons/ci";
 import { GoTrash } from "react-icons/go";
 import { useSeller } from "../context/SellerContext"; // Importing Formik context
+import axiosInstance from "../utils/axiosInstance";
 
 const SellerStep2 = ({ onNext }) => {
   const { formik } = useSeller(); // Use the Formik context
   const progress = 40;
   const [isGSTRegistered, setIsGSTRegistered] = useState(true);
+  const [foodCategories, setFoodCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosInstance.get("global/all-categories");
+        console.log("Categories", response.data.categories);
+        setFoodCategories(response?.data?.categories);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleGSTSelection = (isRegistered) => {
     setIsGSTRegistered(isRegistered);
@@ -64,7 +80,7 @@ const SellerStep2 = ({ onNext }) => {
             ...prevFiles,
             [type]: { ...prevFiles[type], status: "completed" },
           }));
-        }, 5000);
+        }, 700);
       } else {
         progress += 20;
         setFiles((prevFiles) => ({
@@ -83,9 +99,23 @@ const SellerStep2 = ({ onNext }) => {
     formik.setFieldValue(type, null); // Reset the Formik field when file is removed
   };
 
-  const viewFile = (url) => {
-    console.log(url);
-    window.open(url, "_blank");
+  const handleNextStep = async () => {
+    const errors = await formik.validateForm();
+    formik.setTouched({
+      shopCategory: true,
+      accountHolderName: true,
+      bankName: true,
+      accountNo: true,
+      accountType: true,
+      upiId: true,
+      IFSCCode: true,
+    });
+
+    if (Object.keys(errors).length === 0) {
+      onNext();
+    } else {
+      console.log("Errors:", errors); // Optional: Log the errors for debugging
+    }
   };
 
   return (
@@ -113,9 +143,11 @@ const SellerStep2 = ({ onNext }) => {
             className="border text-[#949494] text-sm font-normal w-full border-[#E6E6E6] rounded-[12px] p-[15px] focus:ring-0 focus:border-[#0D4041]"
           >
             <option value="">Select Category</option>
-            <option value="retail">Retail</option>
-            <option value="food">Food</option>
-            {/* Add more categories as needed */}
+            {foodCategories?.map((category, index) => (
+              <option key={index} value={category._id}>
+                {category.name}
+              </option>
+            ))}
           </select>
           {formik.touched.shopCategory && formik.errors.shopCategory && (
             <div className="text-red-500 text-sm">
@@ -536,9 +568,8 @@ const SellerStep2 = ({ onNext }) => {
         <div className="mt-[50px]">
           <button
             className="bg-[#FE4101] text-white py-[16px] lg:w-2/5 w-full rounded-full hover:bg-[#FE4101] transition duration-300"
-            onClick={onNext}
-            type="submit"
-            aria-label="Next Step"
+            onClick={handleNextStep}
+            type="button"
           >
             Next
           </button>

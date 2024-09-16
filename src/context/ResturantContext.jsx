@@ -19,6 +19,7 @@ export const RestaurantProductProvider = ({ children }) => {
     const fetchRestaurants = async () => {
       try {
         const response = await axiosInstance.get("global/top-rated-restaurants");
+        console.log(response.data.restaurants)
         setRestaurants(response.data.restaurants);
         setLoadingRestaurants(false);
         

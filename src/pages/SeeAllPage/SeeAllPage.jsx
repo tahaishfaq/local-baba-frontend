@@ -8,7 +8,7 @@ const SeeAllPage = () => {
   return (
     <div className='font-figtree'>
     <NavBar/>
-    {/* <Breadcrumb /> */}
+    <Breadcrumb />
     <SeeAllRestaurant/>
     <Footer/>
     </div>

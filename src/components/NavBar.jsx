@@ -39,11 +39,20 @@ export default function NavBar() {
   const { setCurrentStep } = useSeller();
   const [openDeleteAccountPopover, setOpenDeleteAccountPopover] =
     useState(false);
+  
 
   const handleDeleteAccount = () => {
     setOpenDeleteAccountPopover(!openDeleteAccountPopover);
   };
 
+  const handleLogout = async () => {
+    const res = await logout();
+
+    console.log(res);
+    if (res.success) {
+      navigate("/");
+    }
+  };
   return (
     <>
       <DeleteAccountPopover
@@ -84,7 +93,11 @@ export default function NavBar() {
                   <Popover.Button className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
                     <span>
                       <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ8GwkViOEunBePpydMn-mpr6mEIaK5MU-7w&s"
+                        src={
+                          user?.image
+                            ? user?.image
+                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ8GwkViOEunBePpydMn-mpr6mEIaK5MU-7w&s"
+                        }
                         alt={user?.name}
                         className="w-10 h-10 rounded-full object-cover object-center"
                       />
@@ -95,7 +108,11 @@ export default function NavBar() {
                     {/* User Info */}
                     <div className="flex items-center gap-4 p-4 border-b">
                       <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ8GwkViOEunBePpydMn-mpr6mEIaK5MU-7w&s"
+                        src={
+                          user?.image
+                            ? user?.image
+                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ8GwkViOEunBePpydMn-mpr6mEIaK5MU-7w&s"
+                        }
                         alt={user?.name}
                         className="w-14 h-14 rounded-full object-cover object-center"
                       />
@@ -105,7 +122,9 @@ export default function NavBar() {
                         </p>
                         <p className="text-sm text-gray-500">{user?.email}</p>
                       </div>
-                      <FiEdit2 className="text-gray-500 cursor-pointer" />
+                      <Link to="/account">
+                        <FiEdit2 className="text-gray-500 cursor-pointer" />
+                      </Link>
                     </div>
 
                     {/* Menu Items */}
@@ -189,7 +208,7 @@ export default function NavBar() {
                       </Link>
                       <span
                         className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
-                        onClick={logout}
+                        onClick={handleLogout}
                       >
                         <div className="p-2 text-[#434343] bg-gray-200 rounded-full">
                           <RiLogoutBoxLine className="w-5 h-5" />
@@ -226,7 +245,12 @@ export default function NavBar() {
                             Buyer Login
                           </p>
                           <p
-                            onClick={() => window.open("https://local-baba-restaurant.vercel.app/login", "_self")}
+                            onClick={() =>
+                              window.open(
+                                "https://local-baba-restaurant.vercel.app/login",
+                                "_self"
+                              )
+                            }
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                           >
                             Seller Login
@@ -379,7 +403,7 @@ export default function NavBar() {
                 </Link>
                 <Link
                   to="/logout"
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="block px-4 py-2 rounded-md text-base font-medium text-[#FE4101] "
                 >
                   Logout

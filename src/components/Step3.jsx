@@ -53,6 +53,19 @@ const Step3 = ({ onNext }) => {
     formik.setFieldValue("foodType", category); // Set Formik field value
   };
 
+  const handleNextStep = async () => {
+    const errors = await formik.validateForm();
+    formik.setTouched({
+      foodType: true,
+    });
+
+    if (Object.keys(errors).length === 0) {
+      onNext();
+    } else {
+      console.log("Errors:", errors); // Optional: Log the errors for debugging
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto lg:py-[70px] py-[30px] lg:px-0 px-4">
       <div className="lg:space-y-[30px] space-y-[20px] lg:pb-5 pb-4">
@@ -103,6 +116,11 @@ const Step3 = ({ onNext }) => {
               </label>
             ))}
           </div>
+          {formik.touched.foodType && formik.errors.foodType && (
+            <div className="text-red-500 text-sm">
+              {formik.errors.foodType}
+            </div>
+          )}
         </div>
 
         {/* Menu Document Upload */}
@@ -152,8 +170,7 @@ const Step3 = ({ onNext }) => {
         <div className="mt-[50px]">
           <button
             className="bg-[#FE4101] text-white py-[16px] lg:w-2/5 w-full rounded-full hover:bg-[#FE4101] transition duration-300"
-            onClick={onNext}
-            aria-label="Next Step"
+            onClick={handleNextStep}
             type="button"
           >
             Next

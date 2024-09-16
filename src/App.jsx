@@ -19,6 +19,7 @@ import OrderProgressPage from "./pages/MyOrdersPage/OrderProgressPage";
 import ChangePassword from "./pages/LoginPage/ChangePassword";
 import MyAccountPage from "./pages/MyOrdersPage/MyAccountPage";
 import SellerOTPPage from "./pages/RegisterPage/SellerOTPPage";
+import ResturantByCategory from "./pages/RestaurantDetails/ResturantByCategory";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/account" element={<MyAccountPage />} />
         <Route path="/my-orders" element={<MyOrdersPage />} />
+        <Route path="/resturant-by-category/:id" element={<ResturantByCategory />} />
         <Route path="/nearby-restaurants/:latitude/:longitude" element={<RestaurantDetails />} />
         <Route path="/item/:id" element={<ItemPage />} />
         <Route path="/order-progress" element={<OrderProgressPage />} /> 

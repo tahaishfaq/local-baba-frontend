@@ -5,7 +5,7 @@ import { FaStar } from "react-icons/fa";
 import RestaurantCardSkeleton from "./skeletons/RestaurantCardDetailSkeleton"; // Import the skeleton component
 import axiosInstance from "../utils/axiosInstance"; // Import the axios instance
 import moment from "moment";
-import {  useResturant } from "../context/ResturantContext";
+import { useResturant } from "../context/ResturantContext";
 
 // const restaurants = [
 //   {
@@ -19,18 +19,15 @@ import {  useResturant } from "../context/ResturantContext";
 //     discount: "", // Optional, can be empty string if not applicable
 //   },]
 
-
 const BestSellingResturant = () => {
-  
   const navigate = useNavigate();
   const [selectedRestaurantId, setSelectedRestaurantId] = useState(null);
-  const {topRestaurants, loadingRestaurants, setSelectedRestaurant} = useResturant()
-
-
+  const { topRestaurants, loadingRestaurants, setSelectedRestaurant } =
+    useResturant();
 
   const handleCardClick = (rest) => {
     setSelectedRestaurantId(rest?._id);
-    setSelectedRestaurant(rest)
+    setSelectedRestaurant(rest);
     setTimeout(() => {
       navigate(`/see-resturant-products/${rest?._id}`);
     }, 1000);
@@ -65,7 +62,7 @@ const BestSellingResturant = () => {
               >
                 <div className="relative">
                   <img
-                    src={restaurant.image}
+                    src={restaurant.image ? restaurant.image : "https://st4.depositphotos.com/14953852/24787/v/450/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg"}
                     alt={restaurant.name}
                     className="w-full lg:h-64 h-32 object-center object-cover rounded-xl"
                   />
@@ -82,26 +79,38 @@ const BestSellingResturant = () => {
                       {restaurant.discount}
                     </span>
                   )}
-                  {restaurant.operatingHours && (
-                    <span className="absolute bottom-0 right-0 text-white text-xs font-medium px-3 py-[9px] time-chip backdrop-blur-2xl">
+                  {restaurant?.estimatedDeliveryTime && (
+                    <span className="absolute bottom-0 right-0 text-white text-xs  font-medium px-3 py-[9px] time-chip backdrop-blur-2xl">
                       <span className="flex items-center gap-x-1">
                         <IoIosBicycle className="w-4 h-4" />{" "}
-                        {formatOperatingHours(restaurant.operatingHours)}
+                        {restaurant?.estimatedDeliveryTime}
                       </span>
                     </span>
                   )}
                 </div>
                 <div className="py-4 flex flex-col items-start gap-y-2">
                   <h3 className="lg:text-lg text-base text-[#0D4041] font-semibold capitalize">
-                    {restaurant.name}
+                    {restaurant.name ? restaurant.name : "---"}
                   </h3>
-                  <p className="text-sm font-light text-[#434343]">
-                    {restaurant.cuisineType}
+                  <p className="flex flex-wrap gap-2 text-xs font-light text-[#434343]">
+                    {restaurant.cuisineType && restaurant.cuisineType.length > 0
+                      ? restaurant.cuisineType[0]
+                          .split(",")
+                          .map((cuisine, index) => (
+                            <span
+                              className="bg-gray-100 px-2 py-1 capitalize rounded-full"
+                              key={index}
+                            >
+                              {cuisine}
+                            </span>
+                          ))
+                      : "---"}
                   </p>
-                  <div className="flex items-center justify-between">
+
+                  <div className="flex items-center justify-between pt-1">
                     <span className="text-[#0D4041] flex items-center gap-x-1.5">
                       <FaStar className="text-orange-500" />
-                      {restaurant.ratings.toFixed(2)}
+                      {restaurant.ratings.toFixed(1)}
                     </span>
                   </div>
                 </div>

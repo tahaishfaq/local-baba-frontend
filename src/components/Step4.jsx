@@ -12,23 +12,39 @@ const Step4 = () => {
   const navigate = useNavigate();
 
   const handleNextClick = async () => {
-    await formik.submitForm();
-  
-    // Check if there are no errors after form submission
-    if (formik.isValid && !formik.isSubmitting) {
-      setShowPopover(true);
-    } else {
-      toast.error("Please fill the required fields");
+    const errors = await formik.validateForm();
+    formik.setTouched({
+      letterOfUnderstanding: true,
+      agreement: true,
+    });
 
-      setTimeout(() => {
-        setCurrentStep(2);
-      }, 2000);
+    if (Object.keys(errors).length === 0) {
+      if (localStorage.sellerToken) {
+        await formik.submitForm();
+        if (formik.isValid && !formik.isSubmitting) {
+          setShowPopover(true);
+        } else {
+          toast.error("Please fill the required fields");
+
+          setTimeout(() => {
+            setCurrentStep(2);
+          }, 2000);
+        }
+      } else {
+        toast.error("Sorry! Your Email is not verified");
+        setTimeout(() => {
+          setCurrentStep(1);
+        }, 2000);
+      }
+    } else {
+      console.log("Errors:", errors);
     }
   };
 
   const handleClosePopover = () => {
     setShowPopover(false);
     setTimeout(() => {
+      setCurrentStep(1)
       navigate("/");
     }, 500);
   };

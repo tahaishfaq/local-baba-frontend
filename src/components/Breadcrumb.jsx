@@ -25,11 +25,13 @@ const Breadcrumb = () => {
             <li key={to} className="flex items-center capitalize">
               <span className="mx-2 text-[#949494]"><IoIosArrowForward /></span>
               {isLast ? (
-                <span className="text-[#FE4101]">{decodeURIComponent(value)}</span>
+                <span className="text-[#FE4101]">
+                {`${decodeURIComponent(value.trim()).slice(0, 4)}...${decodeURIComponent(value.trim()).slice(-4)}`}
+              </span>              
               ) : (
-                <Link to={to} className="text-[#FE4101]">
+                <span  className="text-[#FE4101]">
                   {decodeURIComponent(value)}
-                </Link>
+                </span>
               )}
             </li>
           );

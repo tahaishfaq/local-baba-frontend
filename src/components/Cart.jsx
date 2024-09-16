@@ -85,7 +85,7 @@ export default function Cart({ open, setOpen }) {
                             }
                           }}
                         >
-                          <span>Royal Chicken</span>
+                          <span>Checkout</span>
                           <span className="text-sm font-medium flex gap-x-1 items-center">
                             ₹
                             {cartItems.reduce(

@@ -84,14 +84,18 @@ const ItemDetails = () => {
   const { addToCart, cartItems } = useContext(CartContext);
   const [showPopover, setShowPopover] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-
+  const [resturantId, setResturantId] = useState("");
+  const [bestSellingProduct, setBestSellingProduct] = useState([]);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axiosInstance.get(
           `/global/product-details/${id}`
         );
+        console.log("singleItem", response);
         setProduct(response.data.product);
+        setResturantId(response?.data?.product?.restaurant?._id);
+        setBestSellingProduct(response?.data?.product?.restaurant?.products);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -105,6 +109,18 @@ const ItemDetails = () => {
     setSelectedItem(item);
     setShowPopover(true);
   };
+
+  //   useEffect(() => {
+  // try {
+  //   if(resturantId){
+  //     axiosInstance.get("").then((res) => {
+  //       console.log("best selling pro", res);
+  //     })
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  //   },[resturantId])
 
   const closePopover = () => setShowPopover(false);
 
@@ -135,12 +151,19 @@ const ItemDetails = () => {
   if (!product) return <div>Product not found</div>;
 
   return (
-    <div className="mx-auto max-w-[1440px] lg:py-[50px] py-[30px] lg:px-0 px-4">
-      <div className="grid grid-cols-1 space-y-20">
-        <div className="lg:space-y-10 space-y-6">
-          <h1 className="lg:text-4xl text-2xl font-bold text-[#0D4041]  capitalize">
-            {product.itemName}
-          </h1>
+    <div className="mx-auto max-w-[1440px] lg:py-[15px] py-[30px] lg:px-0 px-4">
+      <div className="grid grid-cols-1 space-y-14">
+        <div className="lg:space-y-7 space-y-6">
+          <div className="max-w-lg space-y-4">
+            <h1 className="lg:text-4xl text-2xl font-bold text-[#0D4041]  capitalize">
+              {product.itemName}
+            </h1>
+            <img
+              src={product?.image}
+              alt="product"
+              className="bg-gray-100 w-full h-80"
+            />
+          </div>
           <div className="lg:space-y-3 space-y-1">
             <h3 className="text-[#434343] font-semibold lg:text-lg text-base">
               Description
@@ -154,9 +177,9 @@ const ItemDetails = () => {
             </p>
           </div>
           <div className="flex lg:flex-row flex-col items-start gap-4">
-            <button className="bg-white text-[#FE4101] border border-[#FE4101] py-4 lg:w-1/4 w-full px-4 font-medium text-sm rounded-full">
+            {/* <button className="bg-white text-[#FE4101] border border-[#FE4101] py-4 lg:w-1/4 w-full px-4 font-medium text-sm rounded-full">
               Self Pickup
-            </button>
+            </button> */}
             <button
               className="bg-[#FE4101] text-white py-4 lg:w-1/4 w-full px-4 font-medium text-sm rounded-full"
               onClick={() => handleAddToCartClick(product)}
@@ -171,25 +194,22 @@ const ItemDetails = () => {
             <h2 className="lg:text-4xl text-2xl font-semibold text-[#434343]">
               Best Sellings
             </h2>
-            <button className="text-[#949494] font-medium text-sm border border-[#949494] rounded-full lg:px-10 px-6  lg:py-3 py-2">
-              See All
-            </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-col-5 gap-4 mb-6">
-            {foodItems?.map((item) => (
-              <div key={item.id}>
+            {bestSellingProduct?.map((item) => (
+              <div key={item._id}>
                 <div
                   className="bg-white shadow-sm rounded-lg p-3 border"
                   onClick={() => handleAddToCartClick(item)}
                 >
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={item.itemName}
                     className="w-full h-[182px] object-cover rounded-lg mb-5"
                   />
                   <h3 className="text-[#0D4041] text-xl font-semibold mb-3">
-                    {item.name}
+                    {item.itemName}
                   </h3>
                   <p className="text-[#434343] font-normal text-base mb-5">
                     ₹{item.basePrice}

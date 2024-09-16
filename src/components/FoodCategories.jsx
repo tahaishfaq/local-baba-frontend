@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import CarouselSkeleton from "../components/skeletons/CarouselSkeleton"; 
@@ -73,7 +74,7 @@ function Carousel() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-[70px] relative font-figtree md:overflow-hidden md:z-[-10000] lg:px-0 px-4">
+    <div className="max-w-7xl mx-auto py-[70px] relative font-figtree md:overflow-hidden  lg:px-0 px-4">
       <h1 className="font-bold lg:text-4xl text-2xl mb-7 text-[#434343]">
         Food Categories
       </h1>
@@ -84,16 +85,16 @@ function Carousel() {
             key={item?._id}
             className="px-2 flex items-center justify-center "
           >
-            <div className="text-center flex flex-col items-center cursor-pointer ">
+            <Link to={`/resturant-by-category/${item?._id}`} className="text-center flex flex-col items-center cursor-pointer">
               <img
                 src={item?.image}
                 alt={item?.name}
-                className="lg:w-[152px] lg:h-[152px] w-20 h-20 object-cover object-top rounded-full bg-gray-100"
+                className="lg:w-[120px] lg:h-[120px] w-20 h-20 object-cover object-top rounded-full bg-gray-100"
               />
               <p className="mt-2 lg:text-lg text-sm capitalize text-[#434343] font-semibold">
                 {item?.name}
               </p>
-            </div>
+            </Link>
           </div>
         ))}
       </Slider>

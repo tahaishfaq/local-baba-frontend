@@ -9,6 +9,7 @@ import image from "../assets/Resimage.png";
 import Popover from "../components/Popover";
 import { useResturant } from "../context/ResturantContext";
 import axiosInstance from "../utils/axiosInstance";
+import { IoIosBicycle } from "react-icons/io";
 
 const foodItems = [
   {
@@ -164,24 +165,24 @@ const SeeAllRestaurant = () => {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
+  const [cuisineOptions, setCuisineOptions] = useState([]);
+  const [selectedCuisine, setSelectedCuisine] = useState("");
+  const [vegFilter, setVegFilter] = useState(false); // Initial state: false (off)
+  const [nonVegFilter, setNonVegFilter] = useState(false); // Initial state: false (off)
 
   useEffect(() => {
     axiosInstance
       .get(`global/restaurant-products/${id}`)
       .then((res) => {
-        console.log("single", res?.data);
         setRestaurant(res?.data);
+        setCuisineOptions(res?.data?.restaurant?.cuisineType);
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
   }, [id]);
-
-  const { selectedRestaurant } = useResturant();
-
-  const rows = [foodItems.slice(0, 5)];
 
   const handleAddToCart = () => {
     setShowPopover(true);
@@ -192,18 +193,40 @@ const SeeAllRestaurant = () => {
   };
 
   const handleCardClick = (id) => {
-    console.log("id", id);
     navigate(`/item/${id}`);
   };
 
-  const [selectedCuisine, setSelectedCuisine] = useState("");
+  // Handle Veg switch toggle
+  const toggleVegFilter = () => {
+    setVegFilter(!vegFilter);
+    if (!vegFilter) {
+      setNonVegFilter(false); // Disable Non-Veg when Veg is turned on
+    }
+  };
 
-  // Filter products based on selected cuisine type
-  const filteredProducts = restaurant?.products?.filter((item) =>
-    selectedCuisine
-      ? item?.cuisineType?.toLowerCase() === selectedCuisine?.toLowerCase()
-      : true
-  );
+  // Handle Non-Veg switch toggle
+  const toggleNonVegFilter = () => {
+    setNonVegFilter(!nonVegFilter);
+    if (!nonVegFilter) {
+      setVegFilter(false); // Disable Veg when Non-Veg is turned on
+    }
+  };
+
+  // Filter products based on selected cuisine and food type
+  const filteredProducts = restaurant?.products?.filter((item) => {
+    const matchesCuisine =
+      selectedCuisine.length === 0 ||
+      item?.cuisineType?.toLowerCase() === selectedCuisine?.toLowerCase();
+
+    const matchesVegFilter =
+      !vegFilter || (vegFilter && item?.foodType?.toLowerCase() === "veg");
+
+    const matchesNonVegFilter =
+      !nonVegFilter ||
+      (nonVegFilter && item?.foodType?.toLowerCase() === "non-veg");
+
+    return matchesCuisine && matchesVegFilter && matchesNonVegFilter;
+  });
 
   const formatOperatingHours = (hours) => {
     const [start, end] = hours?.split("-");
@@ -233,11 +256,14 @@ const SeeAllRestaurant = () => {
               className="w-20 h-16 sm:w-28 sm:h-24 rounded-xl bg-gray-100"
             />
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#0D4041]">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#0D4041] capitalize">
                 {restaurant?.restaurant?.name}
               </h2>
               <p className="text-[#434343] font-normal text-base sm:text-lg">
-                {restaurant?.restaurant?.address}
+                <span className="flex items-center gap-x-1">
+                  <IoIosBicycle className="w-6 h-6" />{" "}
+                  {restaurant?.restaurant?.estimatedDeliveryTime}
+                </span>
               </p>
             </div>
           </div>
@@ -269,17 +295,6 @@ const SeeAllRestaurant = () => {
 
           <div className="mb-4 sm:mb-0">
             <p className="text-[#434343] font-semibold text-lg sm:text-xl">
-              No of Employees
-            </p>
-            <p className="text-[#949494] font-normal text-sm sm:text-base">
-              {restaurant?.restaurant?.noOfEmployees}
-            </p>
-          </div>
-
-          <div className="hidden sm:block border-r border-[#9494944D]"></div>
-
-          <div className="mb-4 sm:mb-0">
-            <p className="text-[#434343] font-semibold text-lg sm:text-xl">
               Working Hours
             </p>
             {restaurant?.restaurant?.operatingHours && (
@@ -292,10 +307,7 @@ const SeeAllRestaurant = () => {
 
         <div className="">
           <p className="text-[#949494] font-normal text-sm">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta
-            laborum assumenda molestias quae, distinctio accusamus corporis ad
-            dolor doloribus! In similique explicabo deleniti eaque incidunt non
-            ea consequuntur numquam placeat!
+            {restaurant?.restaurant?.description}
           </p>
         </div>
       </div>
@@ -320,13 +332,7 @@ const SeeAllRestaurant = () => {
               />
               <h3 className="text-lg font-semibold mt-4">{item.itemName}</h3>
               <p className="text-gray-500">₹{item.basePrice}</p>
-              <button
-                // onClick={(e) => {
-                //   e.stopPropagation();
-                //   handleAddToCart();
-                // }}
-                className="mt-4 text-[#FE4101] text-base font-semibold border-[#D9D9D9] border py-2 px-4 rounded-full w-full hover:border-[#FE4101]"
-              >
+              <button className="mt-4 text-[#FE4101] text-base font-semibold border-[#D9D9D9] border py-2 px-4 rounded-full w-full hover:border-[#FE4101]">
                 Add to Cart
               </button>
             </div>
@@ -336,7 +342,7 @@ const SeeAllRestaurant = () => {
 
       {showPopover && <Popover onClose={handleClosePopover} />}
 
-      <div className="">
+      <div>
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 mt-6">
           <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-9">
             All Cuisines
@@ -352,22 +358,55 @@ const SeeAllRestaurant = () => {
           >
             All
           </button>
-          {["Chicken", "Pizza", "Burger", "Sandwich", "Sushi", "Dessert"].map(
-            (cuisine, index) => (
-              <button
-                key={index}
-                className={`border  py-1 px-4 rounded-full text-sm hover:bg-[#FE4101] hover:text-white ${
-                  selectedCuisine === cuisine ? "bg-[#FE4101] text-white" : ""
-                }`}
-                onClick={() => setSelectedCuisine(cuisine)}
-              >
-                {cuisine}
-              </button>
-            )
-          )}
+          {cuisineOptions?.[0]?.split(",").map((cuisine, index) => (
+            <button
+              key={index}
+              className={`border border-gray-300 py-1 px-4 rounded-full text-sm hover:bg-[#FE4101] hover:text-white ${
+                selectedCuisine === cuisine.trim()
+                  ? "bg-[#FE4101] text-white"
+                  : ""
+              }`}
+              onClick={() => setSelectedCuisine(cuisine.trim())}
+            >
+              <span className="capitalize">{cuisine.trim()}</span>
+            </button>
+          ))}
         </div>
 
         <div className="border-t mb-9"></div>
+
+        <div className="flex justify-between gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <label className="text-lg font-medium">Veg</label>
+            <div
+              className={`relative inline-flex items-center h-6 rounded-full w-11 ${
+                vegFilter ? "bg-green-500" : "bg-gray-300"
+              }`}
+              onClick={toggleVegFilter}
+            >
+              <span
+                className={`inline-block w-4 h-4 transform rounded-full bg-white transition-transform ${
+                  vegFilter ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-lg font-medium">Non-Veg</label>
+            <div
+              className={`relative inline-flex items-center h-6 rounded-full w-11 ${
+                nonVegFilter ? "bg-red-500" : "bg-gray-300"
+              }`}
+              onClick={toggleNonVegFilter}
+            >
+              <span
+                className={`inline-block w-4 h-4 transform rounded-full bg-white transition-transform ${
+                  nonVegFilter ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredProducts?.map((item) => (

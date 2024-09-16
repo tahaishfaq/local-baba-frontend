@@ -157,16 +157,21 @@ const PayAndOrder = () => {
     try {
       await axiosInstance.post("user/place-order", orderData).then((res) => {
         toast.success("Order Placed Successfully");
+        console.log("order",res);
+        localStorage.setItem("orderOTP", res?.data?.newOrder?.otp)
+        localStorage.setItem("deliveryTime", res?.data?.deliveryTime)
         clearCart();
         setTimeout(() => {
-          navigate("/my-orders");
+          navigate("/order-progress");
         }, 500);
       });
     } catch (error) {
       console.error("Error placing order:", error);
-      toast.error("Please Login to Place Order");
+      toast.error(error.response.data.message);
     }
   };
+
+  const [savedAddresses, setSavedAddresses] = useState([])
 
   const handleShippingInfoChange = (e) => {
     const { name, value } = e.target;
@@ -175,20 +180,33 @@ const PayAndOrder = () => {
       [name]: value,
     }));
   };
+  
 
   const handleSaveAddress = () => {
-    const savedAddresses =
-      JSON.parse(localStorage.getItem("shippingAddresses")) || [];
-    savedAddresses.push(shippingInfo);
-    localStorage.setItem("shippingAddresses", JSON.stringify(savedAddresses));
+    console.log(shippingInfo);
+    if (
+      !shippingInfo.streetAddress || 
+      !shippingInfo.zipCode ||
+      !shippingInfo.state 
+    ) {
+      toast.error("Please fill in all required fields before saving the address.");
+      return;
+    }
+
+    // Save the new address
+    const updatedAddresses = [...savedAddresses, shippingInfo];
+    setSavedAddresses(updatedAddresses);
+    localStorage.setItem("shippingAddresses", JSON.stringify(updatedAddresses));
     toast.success("Address saved successfully!");
   };
 
   useEffect(() => {
-    const savedAddresses =
+    const savedAddressesFromStorage =
       JSON.parse(localStorage.getItem("shippingAddresses")) || [];
-    if (savedAddresses.length > 0) {
-      setShippingInfo(savedAddresses[0]);
+    setSavedAddresses(savedAddressesFromStorage);
+
+    if (savedAddressesFromStorage.length > 0) {
+      setShippingInfo(savedAddressesFromStorage[0]);
     }
   }, []);
 

@@ -8,3 +8,24 @@
 .time-chip{
     border-radius: 14px 0px 10px 0;
 }
+
+/* border text-[#949494] text-sm w-full font-normal border-[#E6E6E6] rounded-[12px] p-[15px] focus:ring-0 focus:outline-none focus:border-[#0D4041]" */
+
+ .css-13cymwt-control {
+    border-radius: 12px !important;
+    color: #949494 !important;
+    padding: 5px;
+}
+
+.css-13cymwt-control:hover{
+    border: 1px solid #E6E6E6 !important;
+}
+
+.css-t3ipsp-control{
+    border: 1px solid #0D4041 !important;
+    border-radius: 12px !important;
+    color: #949494 !important;
+    padding: 5px;
+    outline: none !important;
+    box-shadow: none !important;
+}
