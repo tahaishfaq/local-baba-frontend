@@ -5,7 +5,7 @@ import Footer from '../../components/Footer'
 import RestaurantCardDetail from '../../components/RestaurantCardDetail'
 
 import ResturantCategory from '../../components/ResturantCategory'
-import BreadCrumb from '../../components/BreadCrumb'
+import BreadCrumb from '../../components/PagesLink'
 
 const ResturantByCategory = () => {
   return (
