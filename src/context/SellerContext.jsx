@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axiosInstance from "../utils/axiosInstance";
@@ -10,6 +10,12 @@ export const useSeller = () => useContext(SellerContext);
 export const SellerProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [submit, setSubmit] = useState(false);
+
+  useEffect(() => {
+    if (localStorage?.sellerToken) {
+      setCurrentStep(2);
+    }
+  }, [localStorage?.sellerToken]);
 
   const nextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);

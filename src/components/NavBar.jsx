@@ -247,7 +247,7 @@ export default function NavBar() {
                           <p
                             onClick={() =>
                               window.open(
-                                "https://local-baba-restaurant.vercel.app/login",
+                                "https://seller.localbaba.app/login",
                                 "_self"
                               )
                             }

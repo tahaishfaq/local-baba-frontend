@@ -11,7 +11,7 @@ const BreadCrumb = () => {
   return (
     <div className="max-w-[1440px] mx-auto pt-[60px] pb-[30px]">
     <div className="px-4">
-      <ol className="list-reset flex text-[#434343]">
+      <ol className="list-reset flex text-[#434343] lg:text-base text-sm">
         <li>
           <Link to="/" className="">
             Home
