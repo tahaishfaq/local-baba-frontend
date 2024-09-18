@@ -7,6 +7,9 @@ import { AxiosInterceptor } from "./utils/axiosInstance.js";
 import { RestaurantProductProvider } from "./context/ResturantContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { SellerProvider } from "./context/SellerContext.jsx";
+import { LoadScript } from "@react-google-maps/api";
+
+const libraries = ["places"];
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,7 +18,12 @@ createRoot(document.getElementById("root")).render(
         <AxiosInterceptor>
           <CartProvider>
             <SellerProvider>
-            <App />
+              <LoadScript
+                googleMapsApiKey="AIzaSyDsdiSyANogur60VuElSVtY_eO0NUhYEqk"
+                libraries={libraries}
+              >
+                <App />
+              </LoadScript>
             </SellerProvider>
           </CartProvider>
         </AxiosInterceptor>
