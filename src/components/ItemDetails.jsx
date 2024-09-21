@@ -208,7 +208,7 @@ const ItemDetails = () => {
                     alt={item.itemName}
                     className="w-full h-[182px] object-cover rounded-lg mb-5"
                   />
-                  <h3 className="text-[#0D4041] text-xl font-semibold mb-3">
+                  <h3 className="text-[#0D4041] text-base font-semibold mb-3">
                     {item.itemName}
                   </h3>
                   <p className="text-[#434343] font-normal text-base mb-5">

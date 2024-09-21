@@ -11,64 +11,89 @@ export const CartProvider = ({ children }) => {
   const [removeAllConfirm, setRemoveAllConfirm] = useState(false);
   const [newItem, setNewItem] = useState(null);
 
+  // Sync cartItems with localStorage
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (item, quantity) => {
+  // Helper to calculate the price for each item including extras
+  const calculateItemTotal = (item) => {
+    const extrasTotal = item.extras?.reduce((total, extra) => total + extra.price, 0) || 0;
+    return (item.basePrice + extrasTotal) * item.quantity;
+  };
+
+  // Add an item to the cart (with extras considered)
+  const addToCart = (item, quantity, selectedExtras) => {
     if (cartItems.length > 0 && cartItems[0].restaurant._id !== item.restaurant._id) {
-      setNewItem({ ...item, quantity });
+      setNewItem({ ...item, quantity, extras: selectedExtras });
       setRemoveAllConfirm(true);
     } else {
       setCartItems((prevItems) => {
-        const existingItem = prevItems.find((i) => i._id === item._id);
+        const existingItem = prevItems.find(
+          (i) => i._id === item._id && JSON.stringify(i.extras) === JSON.stringify(selectedExtras)
+        );
         if (existingItem) {
           return prevItems.map((i) =>
-            i._id === item._id ? { ...i, quantity: i.quantity + quantity } : i
+            i._id === item._id && JSON.stringify(i.extras) === JSON.stringify(selectedExtras)
+              ? { ...i, quantity: i.quantity + quantity }
+              : i
           );
         }
-        return [...prevItems, { ...item, quantity }];
+        return [...prevItems, { ...item, quantity, extras: selectedExtras }];
       });
     }
   };
 
+  // Clear the cart
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem("cartItems");
   };
 
-  const removeFromCart = (itemId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item._id !== itemId));
-    localStorage.setItem("cartItems", JSON.stringify(cartItems.filter((item) => item._id !== itemId)));
+  // Remove a single item from the cart
+  const removeFromCart = (itemId, extras) => {
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => !(item._id === itemId && JSON.stringify(item.extras) === JSON.stringify(extras)))
+    );
   };
 
+  // Confirm removing all items and add the new item
   const confirmRemoveAll = () => {
     setRemoveAllConfirm(false);
     setCartItems([{ ...newItem }]);
     setNewItem(null);
   };
 
+  // Cancel removing all items
   const cancelRemoveAll = () => {
     setRemoveAllConfirm(false);
     setNewItem(null);
   };
 
-  const increaseQuantity = (itemId) => {
+  // Increase quantity of a specific item (with extras)
+  const increaseQuantity = (itemId, extras) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item._id === itemId ? { ...item, quantity: item.quantity + 1 } : item
+        item._id === itemId && JSON.stringify(item.extras) === JSON.stringify(extras)
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
 
-  const decreaseQuantity = (itemId) => {
+  // Decrease quantity of a specific item (with extras)
+  const decreaseQuantity = (itemId, extras) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item._id === itemId && item.quantity > 1
+        item._id === itemId && JSON.stringify(item.extras) === JSON.stringify(extras) && item.quantity > 1
           ? { ...item, quantity: item.quantity - 1 }
           : item
       )
     );
+  };
+
+  // Calculate total cart price
+  const calculateCartTotal = () => {
+    return cartItems.reduce((total, item) => total + calculateItemTotal(item), 0);
   };
 
   return (
@@ -82,14 +107,18 @@ export const CartProvider = ({ children }) => {
         cancelRemoveAll,
         removeAllConfirm,
         clearCart,
-        removeFromCart
+        removeFromCart,
+        calculateItemTotal,
+        calculateCartTotal,
       }}
     >
       {children}
       {removeAllConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <p className="mb-4">You already have items from a different restaurant in your cart. Would you like to remove all previous items?</p>
+            <p className="mb-4">
+              You already have items from a different restaurant in your cart. Would you like to remove all previous items?
+            </p>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={cancelRemoveAll}

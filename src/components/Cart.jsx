@@ -12,9 +12,11 @@ import { Fragment } from "react";
 import { CartContext } from "../context/CartContext"; // Adjust this path based on your project structure
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Cart({ open, setOpen }) {
-  const { cartItems } = useContext(CartContext);
+  const { cartItems, calculateCartTotal } = useContext(CartContext);
+  const {user} = useAuth() // Use calculateCartTotal from context
   const navigate = useNavigate();
 
   return (
@@ -67,7 +69,7 @@ export default function Cart({ open, setOpen }) {
                     <div className="flex-1 overflow-y-auto px-4 sm:px-6">
                       <div className="space-y-4">
                         {cartItems.map((item) => (
-                          <CartItem key={item.id} item={item} />
+                          <CartItem key={`${item._id}-${JSON.stringify(item.extras)}`} item={item} />
                         ))}
                       </div>
                     </div>
@@ -78,7 +80,7 @@ export default function Cart({ open, setOpen }) {
                         <button
                           className="bg-[#FE4101] text-white font-medium rounded-full w-full flex justify-between items-center pr-8 pl-10 py-4"
                           onClick={() => {
-                            if (localStorage.token) {
+                            if (localStorage.token && user !== null) {
                               navigate("/payOrder");
                             } else {
                               navigate("/login");
@@ -87,12 +89,7 @@ export default function Cart({ open, setOpen }) {
                         >
                           <span>Checkout</span>
                           <span className="text-sm font-medium flex gap-x-1 items-center">
-                            ₹
-                            {cartItems.reduce(
-                              (total, item) =>
-                                total + item.basePrice * item.quantity,
-                              0
-                            )}
+                            ₹{calculateCartTotal().toFixed(2)}
                             <IoIosArrowForward />
                           </span>
                         </button>
@@ -109,9 +106,14 @@ export default function Cart({ open, setOpen }) {
   );
 }
 
+
 const CartItem = ({ item }) => {
-  const { increaseQuantity, decreaseQuantity, removeFromCart } =
-    useContext(CartContext);
+  const { increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
+
+  // Calculate item price including extras
+  const calculateExtrasPrice = () => {
+    return item?.extras?.reduce((total, extra) => total + extra?.price, 0);
+  };
 
   return (
     <div className="flex flex-col space-y-4 p-4 border shadow-sm rounded-lg bg-white">
@@ -127,24 +129,35 @@ const CartItem = ({ item }) => {
               <h3 className="text-sm font-semibold text-[#434343] capitalize">
                 {item.itemName}
               </h3>
-              <p className="text-xs font-medium text-gray-600 w-44 truncate">
+              {item.extras?.length > 0 && (
+                <div className="text-xs text-gray-600">
+                  <p>Extras:</p>
+                  <ul className="list-disc pl-4">
+                    {item.extras.map((extra) => (
+                      <li key={extra._id}>{extra.name} (+₹{extra.price})</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {/* <p className="text-xs font-medium text-gray-600 w-44 truncate">
+              <p>Descrition:</p>
                 {item?.description}
-              </p>
+              </p> */}
             </div>
             <TrashIcon
               className="text-red-500 w-4 h-4 cursor-pointer hover:text-red-600"
-              onClick={() => removeFromCart(item?._id)}
+              onClick={() => removeFromCart(item._id, item.extras)}
             />
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" >
         <p className="text-base font-semibold text-[#434343]">
-          ₹{(item.basePrice * item.quantity).toFixed(2)}
+          ₹{((item.basePrice + calculateExtrasPrice()) * item.quantity).toFixed(2)}
         </p>
         <div className="flex items-center gap-x-3">
           <button
-            onClick={() => decreaseQuantity(item._id)}
+            onClick={() => decreaseQuantity(item._id, item.extras)}
             className="bg-[#FE4101] w-6 h-6 rounded-md text-white text-sm flex items-center justify-center"
           >
             -
@@ -153,7 +166,7 @@ const CartItem = ({ item }) => {
             {item.quantity}
           </span>
           <button
-            onClick={() => increaseQuantity(item._id)}
+            onClick={() => increaseQuantity(item._id, item.extras)}
             className="bg-[#FE4101] w-6 h-6 rounded-md text-white text-sm flex items-center justify-center"
           >
             +

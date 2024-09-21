@@ -20,6 +20,8 @@ import ChangePassword from "./pages/LoginPage/ChangePassword";
 import MyAccountPage from "./pages/MyOrdersPage/MyAccountPage";
 import SellerOTPPage from "./pages/RegisterPage/SellerOTPPage";
 import ResturantByCategory from "./pages/RestaurantDetails/ResturantByCategory";
+import ForgetPassword from "./pages/LoginPage/ForgetPassword";
+import ResetPassword from "./pages/LoginPage/ResetPassword";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
         <Route path="/order-progress" element={<OrderProgressPage />} /> 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/seller-login" element={<SellerLoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/seller-register" element={<SellerRegisterPage />} />

@@ -88,7 +88,7 @@ export default function NavBar() {
               >
                 <BsPerson className="w-5 h-5" /> Become a seller
               </Link>
-              {localStorage.token ? (
+              {localStorage.token && user !== null ? (
                 <Popover className="relative">
                   <Popover.Button className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
                     <span>

@@ -10,9 +10,9 @@ import { useAuth } from "../context/AuthContext";
 
 const PayAndOrder = () => {
   const { cartItems, clearCart } = useContext(CartContext);
-  const [paymentMethod, setPaymentMethod] = useState("cash"); // Default to Cash on Delivery
+  const [paymentMethod, setPaymentMethod] = useState("cash");
   const [loading, setLoading] = useState(false);
-  const [states, setStates] = useState([]); // State to store fetched states
+  const [states, setStates] = useState([]);
   const [shippingInfo, setShippingInfo] = useState({
     streetAddress: "",
     zipCode: "",
@@ -20,17 +20,20 @@ const PayAndOrder = () => {
   });
   const [orderNotes, setOrderNotes] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.basePrice * item.quantity,
-    0
-  );
+  // Calculate subtotal including extras prices
+  const subtotal = cartItems.reduce((acc, item) => {
+    const itemExtrasTotal = item.extras.reduce(
+      (extraAcc, extra) => extraAcc + extra.price,
+      0
+    );
+    return acc + (item.basePrice + itemExtrasTotal) * item.quantity;
+  }, 0);
+
   const deliveryCharges = 50;
   const discount = 10;
   const total = subtotal + deliveryCharges - discount;
-
-  const { user } = useAuth();
-  console.log("user", user);
 
   // Fetch states of India
   useEffect(() => {
@@ -46,10 +49,8 @@ const PayAndOrder = () => {
 
   const handlePlaceOrder = async () => {
     if (paymentMethod === "online") {
-      // If Razorpay is selected, initiate the payment process
       await handleRazorpayPayment();
     } else {
-      // Proceed with Cash on Delivery order placement
       await placeOrder("cod");
     }
   };
@@ -57,34 +58,28 @@ const PayAndOrder = () => {
   const handleRazorpayPayment = async () => {
     try {
       setLoading(true);
-
       if (!window.Razorpay) {
         toast.error("Payment gateway is not loaded. Please try again later.");
         setLoading(false);
         return;
       }
 
-      // Ensure the amount is converted to paise and is an integer
-      const amountInPaise = Math.round(total * 100); // Convert the total amount to paise (INR * 100)
+      const amountInPaise = Math.round(total * 100);
 
-      // Create an order on the server
       const { data: orderData } = await axiosInstance.post(
         "/payment/create-order",
-        {
-          amount: amountInPaise, // Send amount in paise
-        }
+        { amount: amountInPaise }
       );
 
       const options = {
-        key: "rzp_test_qA3Fj4OcAMNXbG", // Your Razorpay Key ID
+        key: "rzp_test_qA3Fj4OcAMNXbG",
         amount: orderData.amount,
         currency: orderData.currency,
         name: "local baba",
         description: "Test Transaction",
-        image: "https://example.com/your_logo", // Replace with your logo URL
+        image: "https://example.com/your_logo",
         order_id: orderData.id,
         handler: async function (response) {
-          // Verify payment on the server
           try {
             const { data: verificationData } = await axiosInstance.post(
               "/payment/verify-payment",
@@ -96,33 +91,26 @@ const PayAndOrder = () => {
             );
 
             if (verificationData.success) {
-              await placeOrder("online", response); // Place the order if payment is successful
+              await placeOrder("online", response);
               toast.success("Payment successful and order placed!");
             } else {
               toast.error("Payment verification failed. Please try again.");
             }
           } catch (verificationError) {
-            console.error("Error verifying payment:", verificationError);
             toast.error("Payment verification failed. Please try again.");
           }
         },
         prefill: {
-          name: user.name, // Prefill user details
-          email: user.email, // Prefill user details
-          contact: user.contact || "9999999999", // Use user's contact or a default value
+          name: user.name,
+          email: user.email,
+          contact: user.contact || "9999999999",
         },
-        notes: {
-          address: "Corporate Office",
-        },
-        theme: {
-          color: "#FE4101", // Customize the theme color
-        },
+        theme: { color: "#FE4101" },
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      console.error("Error in Razorpay payment:", error);
       toast.error("Payment failed. Please try again.");
     } finally {
       setLoading(false);
@@ -137,13 +125,12 @@ const PayAndOrder = () => {
         quantity: item.quantity,
         image: item.image,
         product: item._id,
+        extras: item.extras, // Include extras in the order data
       })),
       paymentInfo: {
         status: method === "cod" ? "unpaid" : "paid",
         paymentMethod: method,
         id: razorpayResponse?.razorpay_payment_id,
-        // razorpayOrderId: razorpayResponse?.razorpay_order_id,
-        // razorpaySignature: razorpayResponse?.razorpay_signature,
       },
       paidAt: new Date().toISOString(),
       itemsPrice: subtotal,
@@ -157,21 +144,19 @@ const PayAndOrder = () => {
     try {
       await axiosInstance.post("user/place-order", orderData).then((res) => {
         toast.success("Order Placed Successfully");
-        console.log("order",res);
-        localStorage.setItem("orderOTP", res?.data?.newOrder?.otp)
-        localStorage.setItem("deliveryTime", res?.data?.deliveryTime)
+        localStorage.setItem("orderOTP", res?.data?.newOrder?.otp);
+        localStorage.setItem("deliveryTime", res?.data?.deliveryTime);
         clearCart();
         setTimeout(() => {
           navigate("/order-progress");
         }, 500);
       });
     } catch (error) {
-      console.error("Error placing order:", error);
       toast.error(error.response.data.message);
     }
   };
 
-  const [savedAddresses, setSavedAddresses] = useState([])
+  const [savedAddresses, setSavedAddresses] = useState([]);
 
   const handleShippingInfoChange = (e) => {
     const { name, value } = e.target;
@@ -180,16 +165,17 @@ const PayAndOrder = () => {
       [name]: value,
     }));
   };
-  
 
   const handleSaveAddress = () => {
     console.log(shippingInfo);
     if (
-      !shippingInfo.streetAddress || 
+      !shippingInfo.streetAddress ||
       !shippingInfo.zipCode ||
-      !shippingInfo.state 
+      !shippingInfo.state
     ) {
-      toast.error("Please fill in all required fields before saving the address.");
+      toast.error(
+        "Please fill in all required fields before saving the address."
+      );
       return;
     }
 
@@ -434,6 +420,11 @@ export default PayAndOrder;
 const CartItem = ({ item }) => {
   const { increaseQuantity, decreaseQuantity } = useContext(CartContext);
 
+  const extrasTotal = item.extras.reduce(
+    (total, extra) => total + extra.price,
+    0
+  );
+
   return (
     <div className="flex items-start space-x-4 p-4 border shadow-sm rounded-lg">
       <img
@@ -446,13 +437,23 @@ const CartItem = ({ item }) => {
           <h3 className="text-sm font-semibold text-[#434343] mb-1 capitalize">
             {item.itemName}
           </h3>
-          <p className="text-xs  font-semibold text-[#434343] mb-1 w-28 lg:w-48 truncate">
+          {/* <p className="text-xs  font-semibold text-[#434343] mb-1 w-28 lg:w-48 truncate">
             {item?.description}
-          </p>
+          </p> */}
+          {/* Display extras */}
+          {item.extras.length > 0 && (
+            <ul className="text-xs text-[#434343]">
+              {item.extras.map((extra, idx) => (
+                <li key={idx}>
+                  + {extra.name}: ₹{extra.price}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium text-[#434343]">
-            ₹{(item.basePrice * item.quantity).toFixed(2)}
+            ₹{((item.basePrice + extrasTotal) * item.quantity).toFixed(2)}
           </p>
           <div className="flex gap-x-2 sm:gap-x-4 items-center">
             <span
