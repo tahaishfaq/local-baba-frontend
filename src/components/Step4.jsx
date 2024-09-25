@@ -3,7 +3,7 @@ import ProgressBar from "./ProgressBar";
 import SellerPopover from "./SellerPopover";
 import { useSeller } from "../context/SellerContext"; // Import Formik context
 import { toast, Toaster } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Step4 = () => {
   const { formik, setCurrentStep } = useSeller(); // Use Formik context
@@ -28,11 +28,13 @@ const Step4 = () => {
 
           setTimeout(() => {
             setCurrentStep(2);
+            // localStorage.removeItem("sellerToken")
           }, 2000);
         }
       } else {
         toast.error("Sorry! Your Email is not verified");
         setTimeout(() => {
+          localStorage.removeItem("sellerToken")
           setCurrentStep(1);
         }, 2000);
       }
@@ -44,6 +46,7 @@ const Step4 = () => {
   const handleClosePopover = () => {
     setShowPopover(false);
     setTimeout(() => {
+      localStorage.removeItem("sellerToken")
       setCurrentStep(1)
       navigate("/");
     }, 500);
@@ -77,7 +80,7 @@ const Step4 = () => {
                 className="form-checkbox text-[#FE4101] rounded-[6px] border border-[#949494] focus:ring-0 h-6 w-6"
               />
               <span className="text-[#434343] font-normal text-[18px]">
-                Confirm your agreement to give a 15% commission to Local Baba.
+                Confirm your agreement to give a 20%+ commission to Local Baba.
               </span>
             </label>
             {formik.touched.agreement && formik.errors.agreement && (
@@ -85,6 +88,11 @@ const Step4 = () => {
                 {formik.errors.agreement}
               </div>
             )}
+          </div>
+          <div>
+          <span className="text-[#434343] font-normal text-[18px]">
+                By sigining up check our <Link to="/terms&condition" className="text-[#FE4101]">Terms & Conditions</Link>
+              </span>
           </div>
 
           {/* Letter of Understanding */}

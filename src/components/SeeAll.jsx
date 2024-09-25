@@ -138,8 +138,10 @@ const FoodCard = ({ _id, itemName, basePrice, image, description, extras }) => {
   const { cartItems, addToCart, increaseQuantity, decreaseQuantity } =
     useContext(CartContext);
 
+    
   // Local state to track selected extras
   const [selectedExtras, setSelectedExtras] = useState([]);
+  const navigate = useNavigate()
 
   // Helper to calculate the total price for an item with extras
   const calculateExtrasTotal = () => {
@@ -162,13 +164,18 @@ const FoodCard = ({ _id, itemName, basePrice, image, description, extras }) => {
     }
   };
 
+  const handleCardClick = (id) => {
+    navigate(`/item/${id}`);
+  };
+
   return (
     <div className="bg-white shadow-sm rounded-lg p-4 border">
       <div className="flex flex-col sm:flex-row">
         <img
+         onClick={() => handleCardClick(_id)}
           src={image}
           alt={itemName}
-          className="rounded-lg w-full sm:w-1/3"
+          className="rounded-lg w-full sm:w-1/3 cursor-pointer"
         />
         <div className="flex flex-col justify-between flex-1 mt-4 sm:mt-0 sm:ml-4">
           <div>

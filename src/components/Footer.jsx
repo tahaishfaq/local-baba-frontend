@@ -97,8 +97,11 @@ export default function Footer() {
           <div className="space-y-8">
             <img alt="Company name" src={logo} className="" />
             <p className="text-[16px] leading-6 text-[#949494] font-light">
-              Lorem ipsum dolor sit amet consectetur adipiscing elit aliquam
-              mauris sed ma
+              Localbaba, Akruti Centre Point, Next Marol Telephone Exchange, MIDC
+              Anderi(East), MUMBAI - 400093 
+            </p>
+            <p className="text-[16px] leading-6 text-[#949494] font-light">
+              Phone #: +91 89046 02939 / 80884 33123
             </p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (

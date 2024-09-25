@@ -139,7 +139,7 @@ const ContactUsForm = () => {
                 <span>-</span>
               </h4>
               <p className="text-[#0D4041] text-lg sm:text-xl md:text-[22px] lg:text-[22px] font-medium mb-4">
-                help@info.com
+                info@localbaba.app
               </p>
 
               <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
@@ -155,8 +155,8 @@ const ContactUsForm = () => {
                 <br />
                 <span>-</span>
               </h4>
-              <p className="text-[#0D4041] text-lg sm:text-xl md:text-[22px] lg:text-[22px] font-medium mb-4">
-                (800) 998-94256
+              <p className="text-[#0D4041] text-lg sm:text-xl md:text-[20px] lg:text-[20px] font-medium mb-4">
+              +91 89046 02939 / 80884 33123
               </p>
 
               <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
