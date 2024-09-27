@@ -90,7 +90,7 @@ const FAQ = () => {
           </p> */}
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 mt-10">
         {faqs?.map((faq, index) => (
           <div
             key={index}
