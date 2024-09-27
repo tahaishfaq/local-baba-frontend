@@ -22,6 +22,8 @@ import SellerOTPPage from "./pages/RegisterPage/SellerOTPPage";
 import ResturantByCategory from "./pages/RestaurantDetails/ResturantByCategory";
 import ForgetPassword from "./pages/LoginPage/ForgetPassword";
 import ResetPassword from "./pages/LoginPage/ResetPassword";
+import HelpAndSupport from "./pages/TermsConditionPage/HelpAndSupport";
+import RefundCancellationPolicy from "./pages/TermsConditionPage/RefundAndCancellation";
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
         <Route path="/otp" element={<OTPPage />} />
         <Route path="/seller-otp" element={<SellerOTPPage />} />
         <Route path="/terms&condition" element={<TermsConditionPage/>} />
+        <Route path="/help&support" element={<HelpAndSupport/>} />
+        <Route path="/refund" element={<RefundCancellationPolicy/>} />
         <Route path="/aboutus" element={<AboutUsPage/>} />
         <Route path="/contactus" element={<ContactUs/>} />
         <Route path="/see-resturant-products/:id" element={<SeeAllPage/>} />

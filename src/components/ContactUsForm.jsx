@@ -136,7 +136,7 @@ const ContactUsForm = () => {
               <h4 className="text-xl sm:text-2xl md:text-[22px] lg:text-[22px] font-medium text-[#0D4041] mb-4">
                 Email Address
                 <br />
-                <span>-</span>
+                {/* <span>-</span> */}
               </h4>
               <p className="text-[#0D4041] text-lg sm:text-xl md:text-[22px] lg:text-[22px] font-medium mb-4">
                 info@localbaba.app
@@ -146,14 +146,14 @@ const ContactUsForm = () => {
                 Assistance hours:
               </p>
               <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
-                Monday – Friday: 6am to 8pm EST
+                Monday – Friday: 9am to 6pm EST
               </p>
             </div>
             <div className="w-full max-w-xs pt-10">
               <h4 className="text-xl sm:text-2xl md:text-[22px] lg:text-[22px] font-medium text-[#0D4041] mb-4">
                 Number
                 <br />
-                <span>-</span>
+                {/* <span>-</span> */}
               </h4>
               <p className="text-[#0D4041] text-lg sm:text-xl md:text-[20px] lg:text-[20px] font-medium mb-4">
               +91 89046 02939 / 80884 33123
@@ -163,7 +163,7 @@ const ContactUsForm = () => {
                 Assistance hours:
               </p>
               <p className="text-[#0D4041] text-base sm:text-lg md:text-xl font-light">
-                Monday – Friday: 6 am to 8 pm EST
+                Monday – Friday: 9am to 6pm EST
               </p>
             </div>
           </div>

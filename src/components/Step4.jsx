@@ -80,7 +80,7 @@ const Step4 = () => {
                 className="form-checkbox text-[#FE4101] rounded-[6px] border border-[#949494] focus:ring-0 h-6 w-6"
               />
               <span className="text-[#434343] font-normal text-[18px]">
-                Confirm your agreement to give a 20%+ commission to Local Baba.
+                Confirm your agreement to give a 20%+ GST to Local Baba.
               </span>
             </label>
             {formik.touched.agreement && formik.errors.agreement && (

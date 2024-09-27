@@ -7,15 +7,13 @@ const navigation = {
     { name: "Contact Us", href: "/contactus" },
   ],
   ContactUs: [
-    { name: "Help & Support", href: "#" },
-    { name: "Partner with us", href: "#" },
-    { name: "Ride with us", href: "#" },
+    { name: "Help & Support", href: "/help&support" },
+    { name: "Refund Policies", href: "/refund" },
   ],
   legal: [
     { name: "Terms & Conditions", href: "/terms&condition" },
-    { name: "Cookie Policy", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Investor Relations", href: "#" },
+    { name: "Privacy Policy", href: "/terms&condition" },
+  
   ],
   Downloads: [
     { name: "iOS", href: "#" },

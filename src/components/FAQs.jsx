@@ -83,11 +83,11 @@ const FAQ = () => {
           <h2 className="lg:text-[36px] text-2xl font-bold text-center text-[#0D4041] ">
             Frequently Asked Questions
           </h2>
-          <p className="text-center text-[#949494] lg:text-base text-xs lg:mb-10 mb-5 font-normal lg:px-0 px-4">
+          {/* <p className="text-center text-[#949494] lg:text-base text-xs lg:mb-10 mb-5 font-normal lg:px-0 px-4">
             Lorem ipsum dolor sit amet consectetur adipiscing elit aenean id
             volutpat imperdiet quis at pellentesque nunc commodo nunc purus
             pulvinar nisi fusce.
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="space-y-4">

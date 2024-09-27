@@ -102,7 +102,7 @@ const SellerStep2 = ({ onNext }) => {
   const handleNextStep = async () => {
     const errors = await formik.validateForm();
     formik.setTouched({
-      shopCategory: true,
+      // shopCategory: true,
       accountHolderName: true,
       bankName: true,
       accountNo: true,
@@ -135,7 +135,7 @@ const SellerStep2 = ({ onNext }) => {
       <form onSubmit={formik.handleSubmit} className="space-y-[30px]">
         <div className="space-y-[20px] w-full">
           <label className="block text-[#434343] font-medium text-[20px]">
-            Shop Category
+            Shop Category <span className="italic text-gray-400 text-base ml-2">Optional</span>
           </label>
           <select
             name="shopCategory"
@@ -149,11 +149,11 @@ const SellerStep2 = ({ onNext }) => {
               </option>
             ))}
           </select>
-          {formik.touched.shopCategory && formik.errors.shopCategory && (
+          {/* {formik.touched.shopCategory && formik.errors.shopCategory && (
             <div className="text-red-500 text-sm">
               {formik.errors.shopCategory}
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="space-y-[20px]">
@@ -189,7 +189,7 @@ const SellerStep2 = ({ onNext }) => {
             <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 mt-8">
               <div>
                 <input
-                  type="number"
+                  type="text"
                   name="gstNo"
                   placeholder="GST No."
                   {...formik.getFieldProps("gstNo")}
