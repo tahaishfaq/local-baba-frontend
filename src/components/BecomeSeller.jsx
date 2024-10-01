@@ -56,6 +56,31 @@ const BecomeSeller = ({ onNext }) => {
     formik.setFieldValue("address", value);
   };
 
+  // Function to get the user's current location
+  const handleUseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        // Reverse geocoding to convert latitude/longitude to address
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyDsdiSyANogur60VuElSVtY_eO0NUhYEqk`
+        );
+        const data = await response.json();
+
+        if (data.results && data.results.length > 0) {
+          const currentAddress = data.results[0].formatted_address;
+          setAddress(currentAddress);
+          formik.setFieldValue("address", currentAddress);
+        } else {
+          console.error("No address found for this location");
+        }
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
   // Handle image change for file input
   const handleImageChange = (event, fieldName) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -416,7 +441,7 @@ const BecomeSeller = ({ onNext }) => {
                   </div>
                 )}
               </div>
-              <div>
+              <div className="col-span-2">
                 <PlacesAutocomplete
                   value={address}
                   onChange={setAddress}
@@ -440,6 +465,7 @@ const BecomeSeller = ({ onNext }) => {
                         })}
                       />
                       <div className="absolute top-full left-0 mt-2 w-full bg-white shadow-lg rounded-lg z-10 max-h-60 overflow-y-auto">
+                        
                         {loading && <div>Loading...</div>}
                         {suggestions.map((suggestion, index) => {
                           const className = suggestion.active
@@ -460,6 +486,15 @@ const BecomeSeller = ({ onNext }) => {
                           );
                         })}
                       </div>
+                      <div className="absolute z-10 top-[20%] right-2">
+                          <button
+                            type="button"
+                            onClick={handleUseCurrentLocation}
+                            className="w-full px-3 py-2 bg-[#FE4101] text-white text-xs font-medium rounded-full"
+                          >
+                            Current Location
+                          </button>
+                        </div>
                     </div>
                   )}
                 </PlacesAutocomplete>
@@ -469,6 +504,8 @@ const BecomeSeller = ({ onNext }) => {
                   </div>
                 )}
               </div>
+
+
               <div>
                 <input
                   type="number"
@@ -518,7 +555,8 @@ const BecomeSeller = ({ onNext }) => {
                   </option>
                   <option value="6-10">6 AM - 10 PM</option>
                   <option value="7-11">7 AM - 11 PM</option>
-                  <option value="8-12">8 AM - 12 AM</option>
+                  <option value="11-10">11 AM - 10 PM</option>
+                  <option value="8-12">8 AM - 12 PM</option>
                   {/* Add more options as needed */}
                 </select>
                 {formik.touched.operatingHours &&
