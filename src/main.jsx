@@ -19,7 +19,7 @@ createRoot(document.getElementById("root")).render(
           <CartProvider>
             <SellerProvider>
               <LoadScript
-                googleMapsApiKey="AIzaSyDsdiSyANogur60VuElSVtY_eO0NUhYEqk"
+                googleMapsApiKey="AIzaSyBU-Yqb6m34Z6ZWGo7ueFrm6OYmP-Ma2hU"
                 libraries={libraries}
               >
                 <App />

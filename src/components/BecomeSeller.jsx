@@ -64,7 +64,7 @@ const BecomeSeller = ({ onNext }) => {
 
         // Reverse geocoding to convert latitude/longitude to address
         const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyDsdiSyANogur60VuElSVtY_eO0NUhYEqk`
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBU-Yqb6m34Z6ZWGo7ueFrm6OYmP-Ma2hU`
         );
         const data = await response.json();
 
