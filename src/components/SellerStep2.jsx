@@ -203,7 +203,7 @@ const SellerStep2 = ({ onNext }) => {
               </div>
               <div>
                 <input
-                  type="number"
+                  type="text"
                   name="panNo"
                   placeholder="PAN No."
                   {...formik.getFieldProps("panNo")}
